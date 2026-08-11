@@ -15,13 +15,11 @@
             overflow-x:hidden;
         }
 
-        /* این wrapper فقط ارتفاع واقعی (بعد از اسکیل) استیج رو نگه می‌داره تا اسکرول صفحه درست باشه */
         #stageWrapper{
             position:relative;
             width:100%;
         }
 
-        /* این div مرجع اصلی طرح است. عرض پایه دقیقا اندازه‌ی صفحه‌نمایش رفرنس فعلی است */
         #stage{
             position:absolute;
             top:0;
@@ -104,8 +102,6 @@
             background:#00AC47;
         }
 
-        /* این دکمه عمدا بیرون از استیج قرار داره تا همیشه دقیقا به گوشه‌ی واقعی صفحه بچسبد،
-           فارغ از اینکه استیج به‌خاطر اختلاف نسبت صفحه چقدر letterbox داره */
         #backBtn{
             position:fixed;
             bottom:0;
@@ -157,8 +153,6 @@
   </a>
 
   <script>
-    // اسکیل کردن کل صفحه فقط بر اساس عرض، تا هیچ فاصله‌ی خالی کنار طرح نیفتد
-    // و همه‌چیز دقیقا با همون نسبت اصلی کوچیک یا بزرگ بشه
     const BASE_WIDTH = 1920;
     const stage = document.getElementById('stage');
     const stageWrapper = document.getElementById('stageWrapper');
@@ -168,10 +162,9 @@
       const scale = window.innerWidth / BASE_WIDTH;
       stage.style.transform = `scale(${scale})`;
 
-      // ارتفاع واقعی wrapper رو برابر ارتفاع اسکیل‌شده استیج می‌کنیم تا اسکرول صفحه درست باشد
       stageWrapper.style.height = (stage.offsetHeight * scale) + 'px';
 
-      // دکمه بازگشت مستقل از استیج اسکیل می‌شود اما همیشه دقیقا در گوشه واقعی صفحه می‌ماند
+
       backBtn.style.transform = `scale(${scale})`;
     }
 
