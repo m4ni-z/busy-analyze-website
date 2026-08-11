@@ -7,10 +7,26 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="icon" href="i.ico">
     <style>
-        body{
-            text-align:center;
+        html, body{
+            margin:0;
+            padding:0;
+            width:100%;
+            height:100%;
             background-color:black;
+            overflow:hidden;
         }
+
+        /* این div مرجع اصلی طرح است. عرض و ارتفاع پایه دقیقا اندازه‌ی صفحه‌نمایش رفرنس فعلی است */
+        #stage{
+            position:fixed;
+            top:0;
+            left:0;
+            width:1920px;
+            height:1080px;
+            transform-origin: top left;
+            text-align:center;
+        }
+
         h1{
             color:#F2C915;
             font-family:Verdana;
@@ -83,42 +99,80 @@
         .social-card.gmail{
             background:#00AC47;
         }
+
+        /* این دکمه عمدا بیرون از استیج قرار داره تا همیشه دقیقا به گوشه‌ی واقعی صفحه بچسبد،
+           فارغ از اینکه استیج به‌خاطر اختلاف نسبت صفحه چقدر letterbox داره */
+        #backBtn{
+            position:fixed;
+            bottom:0;
+            left:0;
+            transform-origin: bottom left;
+            margin:1rem;
+            z-index:10;
+        }
     </style>
   </head>
   <body>
-    <img src="logo.png" style="position: absolute; top: 5px; left: 10px; width: 100px; width: 150px;;">
-    <br><br><br>
-    <h1>Cantact us</h1>
-    <br><br><br><br><br><br><br><br>
-    <div class="card-wrapper">
 
-        <!--Telegram-->
-        <div class="social-card telegram">
-            <div class="photo">
-                <img style="width:90px; height:90px;" src="telegram.ico" alt="Telegram">
+    <div id="stage">
+        <img src="logo.png" style="position: absolute; top: 5px; left: 10px; width: 150px;">
+        <br><br><br>
+        <h1>Cantact us</h1>
+        <br><br><br><br><br><br><br><br>
+        <div class="card-wrapper">
+
+            <!--Telegram-->
+            <div class="social-card telegram">
+                <div class="photo">
+                    <img style="width:90px; height:90px;" src="telegram.ico" alt="Telegram">
+                </div>
+                <div class="name">Telegram</div>
+                <div class="handle">@busyanalyze</div>
+                <a class="open-btn" href="https://t.me/busyanalyze">Open</a>
             </div>
-            <div class="name">Telegram</div>
-            <div class="handle">@busyanalyze</div>
-            <a class="open-btn" href="https://t.me/busyanalyze">Open</a>
-        </div>
 
-        <!--Gmail-->
-        <div class="social-card gmail">
-            <div class="photo">
-                <img style="width:100px; height:100px;" src="gmail.ico" alt="Gmail">
+            <!--Gmail-->
+            <div class="social-card gmail">
+                <div class="photo">
+                    <img style="width:100px; height:100px;" src="gmail.ico" alt="Gmail">
+                </div>
+                <div class="name">Gmail</div>
+                <div class="handle">busyanalyze@gmail.com</div>
+                <a class="open-btn" href="https://mail.google.com/mail/?view=cm&fs=1&to=busyanalyze@gmail.com">Send Email</a>
             </div>
-            <div class="name">Gmail</div>
-            <div class="handle">busyanalyze@gmail.com</div>
-            <a class="open-btn" href="https://mail.google.com/mail/?view=cm&fs=1&to=busyanalyze@gmail.com">Send Email</a>
-        </div>
 
+        </div>
     </div>
 
-    <a href="index.html">
-    <button class="btn btn-dark position-fixed bottom-0 start-0 m-3 p-1"
-    style="width:50px; height:50px;">
+    <a href="index.html" id="backBtn">
+    <button class="btn btn-dark p-1" style="width:50px; height:50px;">
     <img src="back.png" class="img-fluid" alt=".">
     </button>
   </a>
+
+  <script>
+    // اسکیل کردن کل صفحه با حفظ دقیق نسبت‌ها روی هر سایز صفحه
+    const BASE_WIDTH = 1920;
+    const BASE_HEIGHT = 1080;
+    const stage = document.getElementById('stage');
+    const backBtn = document.getElementById('backBtn');
+
+    function resizeStage() {
+      const scale = Math.min(
+        window.innerWidth / BASE_WIDTH,
+        window.innerHeight / BASE_HEIGHT
+      );
+      stage.style.transform = `scale(${scale})`;
+      stage.style.left = (window.innerWidth - BASE_WIDTH * scale) / 2 + 'px';
+      stage.style.top = (window.innerHeight - BASE_HEIGHT * scale) / 2 + 'px';
+
+      // دکمه بازگشت مستقل از استیج اسکیل می‌شود اما همیشه دقیقا در گوشه واقعی صفحه می‌ماند
+      backBtn.style.transform = `scale(${scale})`;
+    }
+
+    window.addEventListener('resize', resizeStage);
+    resizeStage();
+  </script>
+
   </body>
 </html>
