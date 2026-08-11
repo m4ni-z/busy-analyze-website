@@ -11,18 +11,22 @@
             margin:0;
             padding:0;
             width:100%;
-            height:100%;
             background-color:black;
-            overflow:hidden;
+            overflow-x:hidden;
         }
 
-        /* این div مرجع اصلی طرح است. عرض و ارتفاع پایه دقیقا اندازه‌ی صفحه‌نمایش رفرنس فعلی است */
+        /* این wrapper فقط ارتفاع واقعی (بعد از اسکیل) استیج رو نگه می‌داره تا اسکرول صفحه درست باشه */
+        #stageWrapper{
+            position:relative;
+            width:100%;
+        }
+
+        /* این div مرجع اصلی طرح است. عرض پایه دقیقا اندازه‌ی صفحه‌نمایش رفرنس فعلی است */
         #stage{
-            position:fixed;
+            position:absolute;
             top:0;
             left:0;
             width:1920px;
-            height:1080px;
             transform-origin: top left;
             text-align:center;
         }
@@ -114,6 +118,7 @@
   </head>
   <body>
 
+    <div id="stageWrapper">
     <div id="stage">
         <img src="logo.png" style="position: absolute; top: 5px; left: 10px; width: 150px;">
         <br><br><br>
@@ -143,6 +148,7 @@
 
         </div>
     </div>
+    </div>
 
     <a href="index.html" id="backBtn">
     <button class="btn btn-dark p-1" style="width:50px; height:50px;">
@@ -151,20 +157,19 @@
   </a>
 
   <script>
-    // اسکیل کردن کل صفحه با حفظ دقیق نسبت‌ها روی هر سایز صفحه
+    // اسکیل کردن کل صفحه فقط بر اساس عرض، تا هیچ فاصله‌ی خالی کنار طرح نیفتد
+    // و همه‌چیز دقیقا با همون نسبت اصلی کوچیک یا بزرگ بشه
     const BASE_WIDTH = 1920;
-    const BASE_HEIGHT = 1080;
     const stage = document.getElementById('stage');
+    const stageWrapper = document.getElementById('stageWrapper');
     const backBtn = document.getElementById('backBtn');
 
     function resizeStage() {
-      const scale = Math.min(
-        window.innerWidth / BASE_WIDTH,
-        window.innerHeight / BASE_HEIGHT
-      );
+      const scale = window.innerWidth / BASE_WIDTH;
       stage.style.transform = `scale(${scale})`;
-      stage.style.left = (window.innerWidth - BASE_WIDTH * scale) / 2 + 'px';
-      stage.style.top = (window.innerHeight - BASE_HEIGHT * scale) / 2 + 'px';
+
+      // ارتفاع واقعی wrapper رو برابر ارتفاع اسکیل‌شده استیج می‌کنیم تا اسکرول صفحه درست باشد
+      stageWrapper.style.height = (stage.offsetHeight * scale) + 'px';
 
       // دکمه بازگشت مستقل از استیج اسکیل می‌شود اما همیشه دقیقا در گوشه واقعی صفحه می‌ماند
       backBtn.style.transform = `scale(${scale})`;
