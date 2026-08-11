@@ -16,7 +16,6 @@
       overflow: hidden;
     }
 
-    /* این div مرجع اصلی طرح است. عرض و ارتفاع پایه دقیقا اندازه‌ی صفحه‌نمایش رفرنس فعلی است */
     #stage {
       position: fixed;
       top: 0;
@@ -52,8 +51,6 @@
       30% { transform: translateY(-10px); }
     }
 
-    /* این دکمه عمدا بیرون از استیج قرار داره تا همیشه دقیقا به گوشه‌ی واقعی صفحه بچسبد،
-       فارغ از اینکه استیج به‌خاطر اختلاف نسبت صفحه چقدر letterbox داره */
     #msgBtn {
       position: fixed;
       bottom: 0;
@@ -96,7 +93,6 @@
       }, { once: true });
     });
 
-    // اسکیل کردن کل صفحه با حفظ دقیق نسبت‌ها روی هر سایز صفحه
     const BASE_WIDTH = 1920;
     const BASE_HEIGHT = 1080;
     const stage = document.getElementById('stage');
@@ -111,7 +107,6 @@
       stage.style.left = (window.innerWidth - BASE_WIDTH * scale) / 2 + 'px';
       stage.style.top = (window.innerHeight - BASE_HEIGHT * scale) / 2 + 'px';
 
-      // دکمه پیام مستقل از استیج اسکیل می‌شود اما همیشه دقیقا در گوشه واقعی صفحه می‌ماند
       msgBtn.style.transform = `scale(${scale})`;
     }
 
