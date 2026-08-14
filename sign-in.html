@@ -220,8 +220,8 @@
   </div>
 
   <script>
-    // ۱. بررسی وضعیت ورود به محض بالا آمدن صفحه
-    const loggedInUser = sessionStorage.getItem("activeUser");
+    // ۱. بررسی وضعیت ورود در حافظه دائمی (localStorage)
+    const loggedInUser = localStorage.getItem("activeUser");
     if (loggedInUser === "saipapolos") {
       window.location.href = "saipa-polos-dashboard.html";
     }
@@ -247,7 +247,7 @@
     window.addEventListener('resize', resizeStage);
     resizeStage();
 
-    // ۲. پردازش فرم ورود و ذخیره در sessionStorage
+    // ۲. پردازش فرم ورود و ذخیره دائمی در localStorage
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
       
@@ -256,8 +256,8 @@
       const errorMsg = document.getElementById('error-msg');
 
       if (user === "saipapolos" && pass === "sp2026") {
-        // ذخیره ورود در حافظه موقت زبانه جاری
-        sessionStorage.setItem("activeUser", "saipapolos");
+        // ذخیره ورود در حافظه دائمی مرورگر (تا زمان کلیر کش باقی می‌ماند)
+        localStorage.setItem("activeUser", "saipapolos");
         
         // انتقال به صفحه اصلی
         window.location.href = "saipa-polos-dashboard.html";
