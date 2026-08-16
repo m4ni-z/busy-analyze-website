@@ -322,6 +322,123 @@
       color: #f2c915;
       box-shadow: 0 0 15px rgba(242, 201, 21, 0.3);
     }
+
+    /* Upload Widget Styles (matches site theme: #f2c915 / #117865) */
+    .ul-drop {
+      border: 2px dashed rgba(242, 201, 21, 0.4);
+      border-radius: 12px;
+      padding: 26px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.3s ease, background 0.3s ease;
+    }
+
+    .ul-drop.drag {
+      border-color: #f2c915;
+      background: rgba(242, 201, 21, 0.06);
+    }
+
+    .ul-drop .ul-icon {
+      width: 38px;
+      height: 38px;
+      margin: 0 auto 10px;
+      display: block;
+      color: #f2c915;
+    }
+
+    .ul-drop .ul-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .ul-drop .ul-hint {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.55);
+      margin-top: 4px;
+    }
+
+    .ul-drop input[type=file] {
+      display: none;
+    }
+
+    .ul-file-row {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 16px;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(17, 120, 101, 0.4);
+      border-radius: 10px;
+      font-size: 14px;
+      color: #ffffff;
+    }
+
+    .ul-file-row.show {
+      display: flex;
+    }
+
+    .ul-file-row .ul-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+
+    .ul-file-row .ul-size {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 12px;
+    }
+
+    .ul-file-row .ul-remove {
+      background: none;
+      border: none;
+      color: #f2c915;
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+      padding: 2px 4px;
+    }
+
+    .ul-bar {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 14px;
+      display: none;
+    }
+
+    .ul-bar.show {
+      display: block;
+    }
+
+    .ul-bar > span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: #f2c915;
+      transition: width 0.2s ease;
+    }
+
+    .ul-status {
+      margin-top: 12px;
+      font-size: 13px;
+      text-align: center;
+      min-height: 16px;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .ul-status.ok {
+      color: #15c49e;
+    }
+
+    .ul-status.err {
+      color: #e4756b;
+    }
   </style>
 </head>
 <body>
@@ -368,17 +485,26 @@
         <div class="content-card" id="card-upload">
           <div class="card-title">Upload File Section</div>
           <div class="card-body-custom">
-            <div class="info-label">Active Emails:</div>
-            <div class="info-box">
-              <div class="info-row">
-                Email 1: <span>Sheikhi.marzie1993@gmail.com</span>
-              </div>
-              <div class="info-row">
-                Email 2: <span>khajevandi.ehsan@gmail.com</span>
-              </div>
+            <div class="ul-drop" id="ulDrop">
+              <svg class="ul-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                <path d="M12 16V4M12 4L7 9M12 4l5 5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <div class="ul-title">Click to select a file</div>
+              <div class="ul-hint">or drag and drop it here</div>
+              <input type="file" id="ulFileInput">
             </div>
+
+            <div class="ul-file-row" id="ulFileRow">
+              <span class="ul-name" id="ulFileName"></span>
+              <span class="ul-size" id="ulFileSize"></span>
+              <button class="ul-remove" id="ulRemoveBtn" title="Remove">✕</button>
+            </div>
+
+            <div class="ul-bar" id="ulBar"><span id="ulBarFill"></span></div>
+            <div class="ul-status" id="ulStatus"></div>
           </div>
-          <a href="https://drive.google.com/drive/folders/1cBAD6UAOXnEMVFJ9xMboOdWb82OLiyMY?usp=sharing" class="open-btn" target="_blank">Open</a>
+          <button class="open-btn" id="ulUploadBtn" type="button" disabled>Upload</button>
         </div>
 
         <!-- Card 2: Analyses -->
@@ -491,6 +617,130 @@
         }, 1000);
       });
     }
+
+    // ================== Upload Widget ==================
+    // Replace with the Apps Script Web App URL deployed for this Drive folder
+    const UL_UPLOAD_URL = "https://script.google.com/macros/s/AKfycbytAdYB_w07VTUEkNtAe-7bTvu6mU01F6DCmBBYdv3I7gqRz8UC5506VyoOuzwcg47C/exec";
+
+    const ulDrop = document.getElementById('ulDrop');
+    const ulFileInput = document.getElementById('ulFileInput');
+    const ulFileRow = document.getElementById('ulFileRow');
+    const ulFileName = document.getElementById('ulFileName');
+    const ulFileSize = document.getElementById('ulFileSize');
+    const ulRemoveBtn = document.getElementById('ulRemoveBtn');
+    const ulUploadBtn = document.getElementById('ulUploadBtn');
+    const ulStatus = document.getElementById('ulStatus');
+    const ulBar = document.getElementById('ulBar');
+    const ulBarFill = document.getElementById('ulBarFill');
+
+    let ulSelectedFile = null;
+
+    function ulFormatSize(bytes) {
+      if (bytes < 1024) return bytes + " B";
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+      return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+    }
+
+    function ulSetFile(file) {
+      ulSelectedFile = file;
+      ulFileName.textContent = file.name;
+      ulFileSize.textContent = ulFormatSize(file.size);
+      ulFileRow.classList.add('show');
+      ulUploadBtn.disabled = false;
+      ulStatus.textContent = "";
+      ulStatus.className = "ul-status";
+    }
+
+    function ulClearFile() {
+      ulSelectedFile = null;
+      ulFileInput.value = "";
+      ulFileRow.classList.remove('show');
+      ulUploadBtn.disabled = true;
+    }
+
+    ulDrop.addEventListener('click', () => ulFileInput.click());
+    ulFileInput.addEventListener('change', e => {
+      if (e.target.files[0]) ulSetFile(e.target.files[0]);
+    });
+
+    ['dragenter', 'dragover'].forEach(evt =>
+      ulDrop.addEventListener(evt, e => { e.preventDefault(); ulDrop.classList.add('drag'); })
+    );
+    ['dragleave', 'drop'].forEach(evt =>
+      ulDrop.addEventListener(evt, e => { e.preventDefault(); ulDrop.classList.remove('drag'); })
+    );
+    ulDrop.addEventListener('drop', e => {
+      const file = e.dataTransfer.files[0];
+      if (file) ulSetFile(file);
+    });
+
+    ulRemoveBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      ulClearFile();
+    });
+
+    function ulFileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    ulUploadBtn.addEventListener('click', async () => {
+      if (!ulSelectedFile) return;
+
+      if (UL_UPLOAD_URL.includes("PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE")) {
+        ulStatus.textContent = "Upload endpoint is not configured yet.";
+        ulStatus.className = "ul-status err";
+        return;
+      }
+
+      ulUploadBtn.disabled = true;
+      ulStatus.textContent = "Preparing file...";
+      ulStatus.className = "ul-status";
+      ulBar.classList.add('show');
+      ulBarFill.style.width = "20%";
+
+      try {
+        const base64 = await ulFileToBase64(ulSelectedFile);
+        ulBarFill.style.width = "55%";
+        ulStatus.textContent = "Uploading...";
+
+        const res = await fetch(UL_UPLOAD_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({
+            name: ulSelectedFile.name,
+            mimeType: ulSelectedFile.type || "application/octet-stream",
+            data: base64
+          })
+        });
+
+        ulBarFill.style.width = "85%";
+        const result = await res.json();
+
+        if (result && result.success) {
+          ulBarFill.style.width = "100%";
+          ulStatus.textContent = "Uploaded ✓";
+          ulStatus.className = "ul-status ok";
+          setTimeout(() => {
+            ulClearFile();
+            ulBar.classList.remove('show');
+            ulBarFill.style.width = "0%";
+          }, 1400);
+        } else {
+          throw new Error(result && result.error ? result.error : "Unknown error");
+        }
+      } catch (err) {
+        ulStatus.textContent = "Upload failed. Please try again.";
+        ulStatus.className = "ul-status err";
+        ulBar.classList.remove('show');
+        ulBarFill.style.width = "0%";
+        ulUploadBtn.disabled = false;
+      }
+    });
   </script>
 
 </body>
