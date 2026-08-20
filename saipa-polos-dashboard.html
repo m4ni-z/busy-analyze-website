@@ -105,12 +105,12 @@
       transition: all 0.5s ease-in-out;
     }
 
-    /* Options Menu Wrapper (تایتل + دکمه‌ها) */
+    /* Options Menu Wrapper */
     .options-menu {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 24px;
+      gap: 20px;
       width: 380px;
       position: absolute;
       left: 50%;
@@ -119,7 +119,6 @@
       z-index: 5;
     }
 
-    /* عنوان Saipa Polos بالای دکمه‌ها */
     .menu-title {
       color: #f2c915;
       font-size: 36px;
@@ -142,11 +141,10 @@
       margin-bottom: 0px;
     }
 
-    /* تنظیمات منو در حالت بزرگ‌نمایی (کل دکمه‌ها می‌روند سمت چپ‌تر) */
     .dashboard-container.expanded-mode .options-menu {
       left: -160px;
       width: 140px;
-      gap: 14px;
+      gap: 12px;
     }
 
     .dashboard-container.expanded-mode .menu-title {
@@ -154,9 +152,14 @@
     }
 
     .dashboard-container.expanded-mode .option-btn {
-      padding: 12px 10px;
-      font-size: 15px;
+      padding: 10px 8px;
+      font-size: 14px;
       border-radius: 8px;
+    }
+
+    .dashboard-container.expanded-mode .logout-btn {
+      padding: 8px 6px;
+      font-size: 13px;
     }
 
     .option-btn {
@@ -187,7 +190,36 @@
       border-radius: 10px;
     }
 
-    /* Active Green State */
+    /* Log Out Button Style */
+    .logout-btn {
+      width: 75%;
+      padding: 10px 16px;
+      background: rgba(20, 20, 20, 0.8);
+      border: 2px solid #e4756b;
+      border-radius: 10px;
+      color: #e4756b;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.4s ease;
+      box-shadow: 0 4px 12px rgba(228, 117, 107, 0.15);
+      outline: none;
+      margin-top: 4px;
+    }
+
+    .logout-btn:hover {
+      background: rgba(228, 117, 107, 0.15);
+      box-shadow: 0 0 18px rgba(228, 117, 107, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .dashboard-container.active-mode .logout-btn {
+      width: 80%;
+      padding: 8px 12px;
+      font-size: 15px;
+    }
+
     .option-btn.active {
       color: #117865 !important;
       border-color: #117865 !important;
@@ -214,7 +246,6 @@
       transform: translateX(0);
     }
 
-    /* بزرگتر شدن کامل کادر محتوا در حالت Expand */
     .dashboard-container.expanded-mode .content-area {
       width: 1120px;
       right: 0px;
@@ -251,7 +282,6 @@
       align-items: center;
     }
 
-    /* دکمه بزرگ‌نمایی */
     .expand-btn {
       background: transparent;
       border: none;
@@ -281,13 +311,6 @@
       color: #ffffff;
     }
 
-    .info-label {
-      font-size: 18px;
-      color: #f2c915;
-      margin-bottom: 16px;
-      font-weight: 600;
-    }
-
     .info-box {
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(17, 120, 101, 0.4);
@@ -310,7 +333,6 @@
       font-weight: 600;
     }
 
-    /* Spoiler Text Style */
     .spoiler-text {
       filter: blur(6px);
       user-select: none;
@@ -327,7 +349,6 @@
       background: transparent;
     }
 
-    /* Copy Button Style */
     .copy-btn {
       background: transparent;
       border: 1px solid rgba(242, 201, 21, 0.4);
@@ -351,7 +372,6 @@
       fill: #f2c915;
     }
 
-    /* Open Button */
     .open-btn {
       display: inline-block;
       width: 100%;
@@ -375,7 +395,6 @@
       box-shadow: 0 0 15px rgba(242, 201, 21, 0.3);
     }
 
-    /* Upload Widget Styles */
     .ul-drop {
       border: 2px dashed rgba(242, 201, 21, 0.4);
       border-radius: 12px;
@@ -495,7 +514,6 @@
 </head>
 <body>
 
-  <!-- Navbar -->
   <div id="navbar">
     <img src="logo.png" class="nav-logo" alt="logo">
 
@@ -522,18 +540,16 @@
   <div id="stage">
     <div class="dashboard-container" id="dashContainer">
       
-      <!-- Options Menu -->
       <div class="options-menu">
         <div class="menu-title">Saipa Polos</div>
         <button class="option-btn" onclick="selectOption('upload')">Upload file</button>
         <button class="option-btn" onclick="selectOption('analyses')">Analyses</button>
         <button class="option-btn" onclick="selectOption('help')">Help</button>
+        <button class="logout-btn" onclick="handleLogout()">Log out</button>
       </div>
 
-      <!-- Content Area -->
       <div class="content-area">
         
-        <!-- Card 1: Upload File -->
         <div class="content-card" id="card-upload">
           <div class="card-title">
             <span>Upload File Section</span>
@@ -561,15 +577,12 @@
           <button class="open-btn" id="ulUploadBtn" type="button" disabled>Upload</button>
         </div>
 
-        <!-- Card 2: Analyses -->
         <div class="content-card" id="card-analyses">
           <div class="card-title">
             <span>Analyses</span>
           </div>
           <div class="card-body-custom">
             <div class="info-box">
-              
-              <!-- Username Row -->
               <div class="info-row">
                 <button class="copy-btn" onclick="copyToClipboard('saipapolos', this)" title="Copy Username">
                   <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
@@ -577,21 +590,17 @@
                 Username: <span>saipapolos</span>
               </div>
 
-              <!-- Password Row with Spoiler -->
               <div class="info-row">
                 <button class="copy-btn" onclick="copyToClipboard('sp1405', this)" title="Copy Password">
                   <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
                 </button>
                 Password: <span id="passText" class="spoiler-text" onclick="toggleSpoiler(this)" title="Click to show password">Busy2026</span>
               </div>
-
             </div>
           </div>
-          <!-- لینک Power BI اضافه شد -->
           <a href="http://185.181.182.214:3365/reports/powerbi/saipapolos/?rs:embed=true" class="open-btn" target="_blank">Open</a>
         </div>
 
-        <!-- Card 3: Help -->
         <div class="content-card" id="card-help">
           <div class="card-title">
             <span>Help</span>
@@ -641,10 +650,8 @@
       container.classList.toggle('expanded-mode');
       
       if (container.classList.contains('expanded-mode')) {
-        // آیکون کوچک‌نمایی (Minimize)
         icon.innerHTML = '<path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>';
       } else {
-        // آیکون بزرگ‌نمایی (Expand)
         icon.innerHTML = '<path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>';
       }
     }
@@ -682,10 +689,17 @@
         activeCard.classList.add('show');
       }
 
-      // اگر از Help خارج شد، حالت بزرگ‌نمایی لغو بشه
       if (targetKey !== 'help') {
         container.classList.remove('expanded-mode');
       }
+    }
+
+    // Log Out Handler (پاکسازی حافظه و انتقال مستقیم به فایل sign-in.html)
+    function handleLogout() {
+      sessionStorage.clear();
+      localStorage.clear();
+      
+      window.location.href = 'sign-in.html';
     }
 
     // Spoiler Toggle Function
