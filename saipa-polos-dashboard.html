@@ -142,6 +142,23 @@
       margin-bottom: 0px;
     }
 
+    /* تنظیمات منو در حالت بزرگ‌نمایی (کل دکمه‌ها می‌روند سمت چپ‌تر) */
+    .dashboard-container.expanded-mode .options-menu {
+      left: -160px;
+      width: 140px;
+      gap: 14px;
+    }
+
+    .dashboard-container.expanded-mode .menu-title {
+      display: none;
+    }
+
+    .dashboard-container.expanded-mode .option-btn {
+      padding: 12px 10px;
+      font-size: 15px;
+      border-radius: 8px;
+    }
+
     .option-btn {
       width: 100%;
       padding: 18px 24px;
@@ -197,6 +214,13 @@
       transform: translateX(0);
     }
 
+    /* بزرگتر شدن کامل کادر محتوا در حالت Expand */
+    .dashboard-container.expanded-mode .content-area {
+      width: 1120px;
+      right: 0px;
+      height: 540px;
+    }
+
     .content-card {
       display: none;
       width: 100%;
@@ -222,6 +246,34 @@
       margin-bottom: 20px;
       border-bottom: 1px solid rgba(242, 201, 21, 0.2);
       padding-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* دکمه بزرگ‌نمایی */
+    .expand-btn {
+      background: transparent;
+      border: none;
+      color: #f2c915;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .expand-btn:hover {
+      background: rgba(242, 201, 21, 0.15);
+      transform: scale(1.1);
+    }
+
+    .expand-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
     }
 
     .card-body-custom {
@@ -323,7 +375,7 @@
       box-shadow: 0 0 15px rgba(242, 201, 21, 0.3);
     }
 
-    /* Upload Widget Styles (matches site theme: #f2c915 / #117865) */
+    /* Upload Widget Styles */
     .ul-drop {
       border: 2px dashed rgba(242, 201, 21, 0.4);
       border-radius: 12px;
@@ -483,7 +535,9 @@
         
         <!-- Card 1: Upload File -->
         <div class="content-card" id="card-upload">
-          <div class="card-title">Upload File Section</div>
+          <div class="card-title">
+            <span>Upload File Section</span>
+          </div>
           <div class="card-body-custom">
             <div class="ul-drop" id="ulDrop">
               <svg class="ul-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
@@ -509,7 +563,9 @@
 
         <!-- Card 2: Analyses -->
         <div class="content-card" id="card-analyses">
-          <div class="card-title">Analyses</div>
+          <div class="card-title">
+            <span>Analyses</span>
+          </div>
           <div class="card-body-custom">
             <div class="info-box">
               
@@ -537,9 +593,16 @@
 
         <!-- Card 3: Help -->
         <div class="content-card" id="card-help">
-          <div class="card-title">Help</div>
-          <div class="card-body-custom" style="display: flex; align-items: center; justify-content: center; height: 100%;">
-            <h2 style="color: #f2c915; font-size: 32px; letter-spacing: 1px;">Coming soon ...</h2>
+          <div class="card-title">
+            <span>Help</span>
+            <button class="expand-btn" onclick="toggleExpandHelp()" title="Toggle Full Width">
+              <svg id="expandIcon" viewBox="0 0 24 24">
+                <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+              </svg>
+            </button>
+          </div>
+          <div class="card-body-custom" style="padding: 0; overflow: hidden; height: 100%;">
+            <iframe src="saipa-polos-dashboard-help.html" style="width: 100%; height: 100%; border: none; background: transparent;"></iframe>
           </div>
         </div>
 
@@ -570,6 +633,22 @@
     window.addEventListener('resize', resizeStage);
     resizeStage();
 
+    // Toggle Full Width for Help Card
+    function toggleExpandHelp() {
+      const container = document.getElementById('dashContainer');
+      const icon = document.getElementById('expandIcon');
+      
+      container.classList.toggle('expanded-mode');
+      
+      if (container.classList.contains('expanded-mode')) {
+        // آیکون کوچک‌نمایی (Minimize)
+        icon.innerHTML = '<path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>';
+      } else {
+        // آیکون بزرگ‌نمایی (Expand)
+        icon.innerHTML = '<path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>';
+      }
+    }
+
     // Menu Switcher with Toggle logic
     function selectOption(targetKey) {
       const container = document.getElementById('dashContainer');
@@ -582,6 +661,7 @@
 
       if (clickedBtn && clickedBtn.classList.contains('active')) {
         container.classList.remove('active-mode');
+        container.classList.remove('expanded-mode');
         buttons.forEach(btn => btn.classList.remove('active'));
         cards.forEach(card => card.classList.remove('show'));
         return;
@@ -601,6 +681,11 @@
       if (activeCard) {
         activeCard.classList.add('show');
       }
+
+      // اگر از Help خارج شد، حالت بزرگ‌نمایی لغو بشه
+      if (targetKey !== 'help') {
+        container.classList.remove('expanded-mode');
+      }
     }
 
     // Spoiler Toggle Function
@@ -619,7 +704,6 @@
     }
 
     // ================== Upload Widget ==================
-    // Replace with the Apps Script Web App URL deployed for this Drive folder
     const UL_UPLOAD_URL = "https://script.google.com/macros/s/AKfycbytAdYB_w07VTUEkNtAe-7bTvu6mU01F6DCmBBYdv3I7gqRz8UC5506VyoOuzwcg47C/exec";
 
     const ulDrop = document.getElementById('ulDrop');

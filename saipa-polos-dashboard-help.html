@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel User Guide | راهنمای استفاده از پنل</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: transparent !important;
+            background-color: transparent !important;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-family: 'Vazirmatn', Arial, sans-serif;
+        }
+
+        /* Language Switcher (Fixed Top Right) */
+        .lang-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #f2c915;
+            padding: 4px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .lang-indicator {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: calc(50% - 4px);
+            height: calc(100% - 8px);
+            background-color: #117865;
+            border-radius: 8px;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
+        }
+
+        body.lang-en .lang-indicator {
+            transform: translateX(100%);
+        }
+
+        .lang-btn {
+            position: relative;
+            z-index: 2;
+            background: none;
+            border: none;
+            outline: none;
+            padding: 6px 16px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            color: #121212;
+            transition: color 0.3s ease;
+            width: 45px;
+            text-align: center;
+        }
+
+        body.lang-fa .lang-btn[data-lang="fa"],
+        body.lang-en .lang-btn[data-lang="en"] {
+            color: #f2c915;
+        }
+
+        /* Content Layout & Visibility */
+        .container {
+            width: 100%;
+            max-width: 850px;
+            padding: 80px 20px 40px 20px;
+        }
+
+        .content-block {
+            display: none;
+            background: rgba(18, 18, 18, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 30px;
+            border: 1px solid rgba(242, 201, 21, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Direction Management */
+        .fa-content {
+            direction: rtl;
+            text-align: right;
+        }
+
+        .en-content {
+            direction: ltr;
+            text-align: left;
+            font-family: Arial, sans-serif;
+        }
+
+        body.lang-fa .fa-content { display: block; }
+        body.lang-en .en-content { display: block; }
+
+        /* Typography & Elements */
+        h1 {
+            font-size: 2.2rem;
+            color: #f2c915;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #117865;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            color: #ffffff;
+            margin: 25px 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        p {
+            line-height: 1.8;
+            color: #dddddd;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        ul {
+            margin: 10px 0 15px 0;
+            padding-right: 20px;
+            padding-left: 20px;
+        }
+
+        li {
+            line-height: 1.8;
+            color: #cccccc;
+            margin-bottom: 8px;
+        }
+
+        code {
+            background-color: #117865;
+            color: #ffffff;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+            direction: ltr;
+            display: inline-block;
+        }
+
+        /* Note Box */
+        .note-box {
+            background-color: rgba(242, 201, 21, 0.08);
+            border-right: 4px solid #f2c915;
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+
+        .en-content .note-box {
+            border-right: none;
+            border-left: 4px solid #f2c915;
+        }
+
+        .note-title {
+            font-weight: bold;
+            color: #f2c915;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        /* Phone Button & Footer Styling */
+        .footer-wrapper {
+            margin-top: 35px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .phone-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f2c915;
+            color: #121212;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(242, 201, 21, 0.3);
+            overflow: hidden;
+            white-space: nowrap;
+            max-width: 200px;
+            border: none;
+            outline: none;
+            user-select: none;
+            direction: ltr;
+        }
+
+        .phone-btn img {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+
+        .phone-btn img.icon-hover { display: none; }
+        .phone-btn:hover img.icon-default { display: none; }
+        .phone-btn:hover img.icon-hover { display: inline-block; }
+
+        .phone-btn .label { transition: opacity 0.3s ease; }
+        .phone-btn .number { display: none; opacity: 0; transition: opacity 0.3s ease; }
+
+        .phone-btn:hover {
+            max-width: 280px;
+            padding: 10px 24px;
+            background-color: #ffd624;
+            box-shadow: 0 6px 20px rgba(242, 201, 21, 0.5);
+            transform: translateY(-2px);
+        }
+        .phone-btn:hover .label { display: none; }
+        .phone-btn:hover .number { display: inline-block; opacity: 1; }
+
+        /* Fixed Floating Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #f2c915;
+            color: #121212;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            direction: ltr;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.7rem; }
+            h2 { font-size: 1.1rem; }
+            .container { padding: 70px 15px 30px 15px; }
+            .content-block { padding: 20px; }
+            .footer-wrapper { flex-direction: column; }
+        }
+    </style>
+</head>
+<body class="lang-en">
+
+    <!-- Language Switcher (Fixed Right) -->
+    <div class="lang-switcher">
+        <div class="lang-indicator"></div>
+        <button class="lang-btn" data-lang="fa">فا</button>
+        <button class="lang-btn" data-lang="en">En</button>
+    </div>
+
+    <div class="container">
+        <!-- Persian Content -->
+        <div class="content-block fa-content">
+            <h1>راهنمای استفاده از پنل</h1>
+
+            <h2>بارگذاری داده‌های ورودی</h2>
+            <p>برای بارگذاری داده‌های ورودی، فایل اکسل خود را از طریق بخش <strong>«آپلود فایل»</strong> در پنل کاربری بارگذاری کنید.</p>
+
+            <div class="note-box">
+                <span class="note-title">توجه داشته باشید:</span>
+                <ul>
+                    <li>فایل باید حتماً با فرمت <strong>Excel</strong> باشد.</li>
+                    <li>نام شیت (Sheet) فایل اکسل باید دقیقاً <code>sp</code> باشد.</li>
+                    <li>از صحت و کامل بودن اطلاعات فایل پیش از بارگذاری اطمینان حاصل کنید؛ بارگذاری فایل با فرمت یا ساختار نادرست ممکن است باعث اختلال در پردازش و نمایش تحلیل‌ها شود.</li>
+                </ul>
+            </div>
+
+            <h2>به‌روزرسانی تحلیل‌ها</h2>
+            <p>پس از بارگذاری فایل، داده‌ها پردازش شده و تحلیل‌ها و داشبورد به‌روزرسانی می‌شوند.</p>
+            <p>فرآیند به‌روزرسانی معمولاً حدود <strong>۶ تا ۸ ساعت</strong> از زمان بارگذاری فایل زمان می‌برد.</p>
+
+            <h2>مشاهده تحلیل‌ها و داشبورد</h2>
+            <p>برای مشاهده تحلیل‌ها و داشبورد، از طریق پنل کاربری وارد بخش <strong>«آنالیزها»</strong> شوید و گزینه <strong>«باز کردن»</strong> را انتخاب کنید.</p>
+            <p>رمز عبور داشبورد نیز در همین بخش نمایش داده می‌شود. در صورتی که رمز عبور به‌صورت مخفی نمایش داده شده باشد، با کلیک روی آن می‌توانید رمز را مشاهده کنید.</p>
+
+            <h2>پشتیبانی</h2>
+            <p>در صورت <strong>ملی شدن اینترنت</strong> یا بروز مشکل در دسترسی به پنل، از طریق راه‌های ارتباطی درج‌شده در سایت با پشتیبانی تماس بگیرید.</p>
+
+            <div class="footer-wrapper">
+                <button class="phone-btn copyBtn" data-number="+989124015073">
+                    <img class="icon-default" src="phone1.ico" alt="Phone Icon">
+                    <img class="icon-hover" src="phone2.ico" alt="Phone Icon Hover">
+                    <span class="label">Phone number</span>
+                    <span class="number">+989124015073</span>
+                </button>
+                <button class="phone-btn copyBtn" data-number="+989373793330">
+                    <img class="icon-default" src="phone1.ico" alt="Phone Icon">
+                    <img class="icon-hover" src="phone2.ico" alt="Phone Icon Hover">
+                    <span class="label">Phone number</span>
+                    <span class="number">+989373793330</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- English Content -->
+        <div class="content-block en-content">
+            <h1>Panel User Guide</h1>
+
+            <h2>Uploading Input Data</h2>
+            <p>To upload your input data, upload your Excel file through the <strong>"File Upload"</strong> section in your user panel.</p>
+
+            <div class="note-box">
+                <span class="note-title">Please note:</span>
+                <ul>
+                    <li>The file must be in <strong>Excel</strong> format.</li>
+                    <li>The name of the Excel sheet must be exactly <code>sp</code>.</li>
+                    <li>Make sure that the file contains complete and accurate data before uploading it. Uploading a file with an incorrect format or structure may cause issues with data processing and analysis display.</li>
+                </ul>
+            </div>
+
+            <h2>Analysis Updates</h2>
+            <p>After uploading the file, the data will be processed and the analyses and dashboard will be updated.</p>
+            <p>The update process usually takes approximately <strong>6 to 8 hours</strong> from the time the file is uploaded.</p>
+
+            <h2>Viewing Analyses and Dashboard</h2>
+            <p>To view the analyses and dashboard, go to the <strong>"Analyses"</strong> section in your user panel and click <strong>"Open"</strong>.</p>
+            <p>The dashboard password is also displayed in this section. If the password is hidden, you can click on it to reveal it.</p>
+
+            <h2>Support</h2>
+            <p>In case of an <strong>internet shutdown</strong> or any issue accessing the panel, please contact support through the contact methods provided on the website.</p>
+
+            <div class="footer-wrapper">
+                <button class="phone-btn copyBtn" data-number="+989124015073">
+                    <img class="icon-default" src="phone1.ico" alt="Phone Icon">
+                    <img class="icon-hover" src="phone2.ico" alt="Phone Icon Hover">
+                    <span class="label">Phone number</span>
+                    <span class="number">+989124015073</span>
+                </button>
+                <button class="phone-btn copyBtn" data-number="+989373793330">
+                    <img class="icon-default" src="phone1.ico" alt="Phone Icon">
+                    <img class="icon-hover" src="phone2.ico" alt="Phone Icon Hover">
+                    <span class="label">Phone number</span>
+                    <span class="number">+989373793330</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="toast" id="toast">Copied to clipboard!</div>
+    </div>
+
+    <script>
+        // Language Switcher
+        const btns = document.querySelectorAll('.lang-btn');
+        btns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.body.className = 'lang-' + btn.dataset.lang;
+            });
+        });
+
+        // Copy Phone Number Logic
+        const copyBtns = document.querySelectorAll('.copyBtn');
+        const toast = document.getElementById('toast');
+
+        copyBtns.forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const phoneNumber = btn.getAttribute('data-number');
+                try {
+                    await navigator.clipboard.writeText(phoneNumber);
+                    showToast('Copied to clipboard!');
+                } catch (err) {
+                    const textArea = document.createElement('textarea');
+                    textArea.value = phoneNumber;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    showToast('Copied to clipboard!');
+                }
+            });
+        });
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
