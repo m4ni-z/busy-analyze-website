@@ -29,7 +29,6 @@
       align-items: center;
     }
 
-    /* Navbar Styles */
     #navbar {
       position: fixed;
       top: 0;
@@ -94,7 +93,6 @@
       opacity: 1;
     }
 
-    /* Login Card Styles */
     .login-card {
       width: 420px;
       background: rgba(15, 15, 15, 0.85);
@@ -175,7 +173,6 @@
 </head>
 <body>
 
-  <!-- Navbar -->
   <div id="navbar">
     <img src="logo.png" class="nav-logo" alt="logo">
 
@@ -220,13 +217,13 @@
   </div>
 
   <script>
-    // ۱. بررسی وضعیت ورود در حافظه دائمی (localStorage)
     const loggedInUser = localStorage.getItem("activeUser");
     if (loggedInUser === "saipapolos") {
       window.location.href = "saipa-polos-dashboard.html";
+    } else if (loggedInUser === "adminstrator") {
+      window.location.href = "adminstrator-dashboard.html";
     }
 
-    // Responsive Stage Scale
     const BASE_WIDTH = 1920;
     const BASE_HEIGHT = 1080;
     const stage = document.getElementById('stage');
@@ -247,7 +244,6 @@
     window.addEventListener('resize', resizeStage);
     resizeStage();
 
-    // ۲. پردازش فرم ورود و ذخیره دائمی در localStorage
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
       
@@ -256,11 +252,13 @@
       const errorMsg = document.getElementById('error-msg');
 
       if (user === "saipapolos" && pass === "sp2026") {
-        // ذخیره ورود در حافظه دائمی مرورگر (تا زمان کلیر کش باقی می‌ماند)
         localStorage.setItem("activeUser", "saipapolos");
         
-        // انتقال به صفحه اصلی
         window.location.href = "saipa-polos-dashboard.html";
+      } else if (user === "adminstrator" && pass === "Busy2026") {
+        localStorage.setItem("activeUser", "adminstrator");
+        
+        window.location.href = "adminstrator-dashboard.html";
       } else {
         errorMsg.style.display = "block";
       }
