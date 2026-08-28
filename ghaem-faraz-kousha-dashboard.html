@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard-Ghaem Faraz Kousha</title>
+  <link rel="icon" href="favicon.ico">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background-color: black;
+      font-family: sans-serif;
+      overflow: hidden;
+    }
+
+    #stage {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 1920px;
+      height: 1080px;
+      transform-origin: top left;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Navbar Styles */
+    #navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      transform-origin: top left;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.9);
+      padding: 10px 20px;
+      gap: 20px;
+    }
+
+    #navbar .nav-logo {
+      height: 50px;
+      width: auto;
+      flex-shrink: 0;
+    }
+
+    .nav-item {
+      text-decoration: none;
+    }
+
+    .nav-item .btn, .btn.nav-item {
+      max-width: 40px;
+      height: 50px;
+      border-radius: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 0;
+      border: none;
+      background-color: transparent;
+      transition: max-width 0.4s ease;
+      white-space: nowrap;
+    }
+
+    .nav-item .btn img, .btn.nav-item img {
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+      flex-shrink: 0;
+      margin: 0;
+    }
+
+    .nav-item .btn-text, .btn.nav-item .btn-text {
+      opacity: 0;
+      color: #f2c915;
+      font-family: sans-serif;
+      font-size: 18px;
+      margin-left: 8px;
+      margin-right: 14px;
+      transition: opacity 0.3s ease 0.1s;
+    }
+
+    .nav-item:hover .btn, button.nav-item:hover {
+      max-width: 220px;
+    }
+
+    .nav-item:hover .btn-text, button.nav-item:hover .btn-text {
+      opacity: 1;
+    }
+
+    /* Dashboard Main Container */
+    .dashboard-container {
+      width: 1200px;
+      height: 600px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.5s ease-in-out;
+    }
+
+    /* Options Menu Wrapper */
+    .options-menu {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      width: 380px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+      z-index: 5;
+    }
+
+    .menu-title {
+      color: #f2c915;
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      text-shadow: 0 0 12px rgba(242, 201, 21, 0.4);
+      transition: all 0.4s ease;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .dashboard-container.active-mode .options-menu {
+      left: 40px;
+      transform: translateX(0);
+      width: 280px;
+    }
+
+    .dashboard-container.active-mode .menu-title {
+      font-size: 18px;
+      margin-bottom: 0px;
+    }
+
+    .dashboard-container.expanded-mode .options-menu {
+      left: -160px;
+      width: 140px;
+      gap: 12px;
+    }
+
+    .dashboard-container.expanded-mode .menu-title {
+      display: none;
+    }
+
+    .dashboard-container.expanded-mode .option-btn {
+      padding: 10px 8px;
+      font-size: 14px;
+      border-radius: 8px;
+    }
+
+    .dashboard-container.expanded-mode .logout-btn {
+      padding: 8px 6px;
+      font-size: 13px;
+    }
+
+    .option-btn {
+      width: 100%;
+      padding: 18px 24px;
+      background: rgba(20, 20, 20, 0.8);
+      border: 2px solid #f2c915;
+      border-radius: 12px;
+      color: #f2c915;
+      font-size: 22px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.4s ease;
+      box-shadow: 0 4px 15px rgba(242, 201, 21, 0.15);
+      outline: none;
+    }
+
+    .option-btn:hover {
+      background: rgba(242, 201, 21, 0.1);
+      box-shadow: 0 0 20px rgba(242, 201, 21, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .dashboard-container.active-mode .option-btn {
+      padding: 14px 18px;
+      font-size: 18px;
+      border-radius: 10px;
+    }
+
+    /* Log Out Button Style */
+    .logout-btn {
+      width: 75%;
+      padding: 10px 16px;
+      background: rgba(20, 20, 20, 0.8);
+      border: 2px solid #e4756b;
+      border-radius: 10px;
+      color: #e4756b;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.4s ease;
+      box-shadow: 0 4px 12px rgba(228, 117, 107, 0.15);
+      outline: none;
+      margin-top: 4px;
+    }
+
+    .logout-btn:hover {
+      background: rgba(228, 117, 107, 0.15);
+      box-shadow: 0 0 18px rgba(228, 117, 107, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .dashboard-container.active-mode .logout-btn {
+      width: 80%;
+      padding: 8px 12px;
+      font-size: 15px;
+    }
+
+    .option-btn.active {
+      color: #117865 !important;
+      border-color: #117865 !important;
+      background: rgba(17, 120, 101, 0.15) !important;
+      box-shadow: 0 0 20px rgba(17, 120, 101, 0.4) !important;
+    }
+
+    /* Content Panels */
+    .content-area {
+      position: absolute;
+      right: 40px;
+      width: 780px;
+      height: 480px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(30px);
+      transition: all 0.5s ease-in-out;
+      z-index: 2;
+    }
+
+    .dashboard-container.active-mode .content-area {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+    }
+
+    .dashboard-container.expanded-mode .content-area {
+      width: 1120px;
+      right: 0px;
+      height: 540px;
+    }
+
+    .content-card {
+      display: none;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 15, 15, 0.85);
+      border: 1px solid #117865;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 8px 32px rgba(17, 120, 101, 0.25);
+      backdrop-filter: blur(10px);
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .content-card.show {
+      display: flex;
+    }
+
+    .card-title {
+      color: #f2c915;
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(242, 201, 21, 0.2);
+      padding-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .expand-btn {
+      background: transparent;
+      border: none;
+      color: #f2c915;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .expand-btn:hover {
+      background: rgba(242, 201, 21, 0.15);
+      transform: scale(1.1);
+    }
+
+    .expand-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    .card-body-custom {
+      flex-grow: 1;
+      color: #ffffff;
+    }
+
+    .info-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(17, 120, 101, 0.4);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .info-row {
+      font-size: 18px;
+      color: #ffffff;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .info-row span {
+      color: #f2c915;
+      font-weight: 600;
+    }
+
+    .spoiler-text {
+      filter: blur(6px);
+      user-select: none;
+      cursor: pointer;
+      transition: filter 0.3s ease, background 0.3s ease;
+      background: rgba(242, 201, 21, 0.15);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .spoiler-text.revealed {
+      filter: blur(0);
+      user-select: text;
+      background: transparent;
+    }
+
+    .copy-btn {
+      background: transparent;
+      border: 1px solid rgba(242, 201, 21, 0.4);
+      border-radius: 6px;
+      padding: 4px 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: rgba(242, 201, 21, 0.2);
+      border-color: #f2c915;
+    }
+
+    .copy-btn svg {
+      width: 16px;
+      height: 16px;
+      fill: #f2c915;
+    }
+
+    .open-btn {
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+      padding: 14px;
+      background: #117865;
+      border: none;
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: auto;
+    }
+
+    .open-btn:hover {
+      background: #15937c;
+      color: #f2c915;
+      box-shadow: 0 0 15px rgba(242, 201, 21, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="navbar">
+    <img src="logo.png" class="nav-logo" alt="logo">
+
+    <a href="index.html" class="nav-item">
+      <button class="btn">
+        <img src="Home.ico" alt=".">
+        <span class="btn-text">Home</span>
+      </button>
+    </a>
+
+    <button class="btn nav-item" type="button">
+      <img src="Dashboards+.ico" alt=".">
+      <span class="btn-text" style="color: #117865;">Dashboards</span>
+    </button>
+
+    <a href="contact-us.html" class="nav-item">
+      <button class="btn">
+        <img src="message.ico" alt=".">
+        <span class="btn-text">Contact us</span>
+      </button>
+    </a>
+  </div>
+
+  <div id="stage">
+    <div class="dashboard-container" id="dashContainer">
+
+      <div class="options-menu">
+        <div class="menu-title">Ghaem Faraz Kousha</div>
+        <button class="option-btn" onclick="selectOption('analyses')">Analyses</button>
+        <button class="option-btn" onclick="selectOption('help')">Help</button>
+        <button class="logout-btn" onclick="handleLogout()">Log out</button>
+      </div>
+
+      <div class="content-area">
+
+        <div class="content-card" id="card-analyses">
+          <div class="card-title">
+            <span>Analyses</span>
+          </div>
+          <div class="card-body-custom">
+            <div class="info-box">
+              <div class="info-row">
+                <button class="copy-btn" onclick="copyToClipboard('username-here', this)" title="Copy Username">
+                  <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                </button>
+                Username: <span>GFK</span>
+              </div>
+
+              <div class="info-row">
+                <button class="copy-btn" onclick="copyToClipboard('Busy2026', this)" title="Copy Password">
+                  <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                </button>
+                Password: <span id="passText" class="spoiler-text" onclick="toggleSpoiler(this)" title="Click to show password">Busy2026</span>
+              </div>
+            </div>
+          </div>
+          <a href="http://185.181.182.214:3365/reports/powerbi/GFK?rs:embed=true" class="open-btn" target="_blank">Open</a>
+        </div>
+
+        <div class="content-card" id="card-help">
+          <div class="card-title">
+            <span>Help</span>
+            <button class="expand-btn" onclick="toggleExpandHelp()" title="Toggle Full Width">
+              <svg id="expandIcon" viewBox="0 0 24 24">
+                <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+              </svg>
+            </button>
+          </div>
+          <div class="card-body-custom" style="padding: 0; overflow: hidden; height: 100%;">
+            <iframe src="ghaem-faraz-kousha-dashboard-help.html" style="width: 100%; height: 100%; border: none; background: transparent;"></iframe>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Scale Handler
+    const BASE_WIDTH = 1920;
+    const BASE_HEIGHT = 1080;
+    const stage = document.getElementById('stage');
+    const navbar = document.getElementById('navbar');
+
+    function resizeStage() {
+      const scale = Math.min(
+        window.innerWidth / BASE_WIDTH,
+        window.innerHeight / BASE_HEIGHT
+      );
+      stage.style.transform = `scale(${scale})`;
+      stage.style.left = (window.innerWidth - BASE_WIDTH * scale) / 2 + 'px';
+      stage.style.top = (window.innerHeight - BASE_HEIGHT * scale) / 2 + 'px';
+
+      navbar.style.transform = `scale(${scale})`;
+    }
+
+    window.addEventListener('resize', resizeStage);
+    resizeStage();
+
+    // Toggle Full Width for Help Card
+    function toggleExpandHelp() {
+      const container = document.getElementById('dashContainer');
+      const icon = document.getElementById('expandIcon');
+
+      container.classList.toggle('expanded-mode');
+
+      if (container.classList.contains('expanded-mode')) {
+        icon.innerHTML = '<path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>';
+      } else {
+        icon.innerHTML = '<path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>';
+      }
+    }
+
+    // Menu Switcher with Toggle logic
+    function selectOption(targetKey) {
+      const container = document.getElementById('dashContainer');
+      const buttons = document.querySelectorAll('.option-btn');
+      const cards = document.querySelectorAll('.content-card');
+
+      const clickedBtn = Array.from(buttons).find(btn =>
+        btn.textContent.toLowerCase().includes(targetKey)
+      );
+
+      if (clickedBtn && clickedBtn.classList.contains('active')) {
+        container.classList.remove('active-mode');
+        container.classList.remove('expanded-mode');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        cards.forEach(card => card.classList.remove('show'));
+        return;
+      }
+
+      container.classList.add('active-mode');
+
+      buttons.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.textContent.toLowerCase().includes(targetKey)) {
+          btn.classList.add('active');
+        }
+      });
+
+      cards.forEach(card => card.classList.remove('show'));
+      const activeCard = document.getElementById(`card-${targetKey}`);
+      if (activeCard) {
+        activeCard.classList.add('show');
+      }
+
+      if (targetKey !== 'help') {
+        container.classList.remove('expanded-mode');
+      }
+    }
+
+    // Log Out Handler (پاکسازی کامل حافظه مرورگر و انتقال به sign-in.html)
+    function handleLogout() {
+      sessionStorage.clear();
+      localStorage.clear();
+
+      window.location.href = 'sign-in.html';
+    }
+
+    // Spoiler Toggle Function
+    function toggleSpoiler(element) {
+      element.classList.toggle('revealed');
+    }
+
+    // Copy to Clipboard Function
+    function copyToClipboard(text, btnElement) {
+      navigator.clipboard.writeText(text).then(() => {
+        btnElement.style.borderColor = '#117865';
+        setTimeout(() => {
+          btnElement.style.borderColor = 'rgba(242, 201, 21, 0.4)';
+        }, 1000);
+      });
+    }
+  </script>
+
+</body>
+</html>

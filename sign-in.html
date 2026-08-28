@@ -220,8 +220,10 @@
     const loggedInUser = localStorage.getItem("activeUser");
     if (loggedInUser === "saipapolos") {
       window.location.href = "saipa-polos-dashboard.html";
-    } else if (loggedInUser === "adminstrator") {
-      window.location.href = "adminstrator-dashboard.html";
+    } else if (loggedInUser === "administrator") {
+      window.location.href = "administrator-dashboard.html";
+    } else if (loggedInUser === "GFK") {
+      window.location.href = "ghaem-faraz-kousha-dashboard.html";
     }
 
     const BASE_WIDTH = 1920;
@@ -255,10 +257,14 @@
         localStorage.setItem("activeUser", "saipapolos");
         
         window.location.href = "saipa-polos-dashboard.html";
-      } else if (user === "adminstrator" && pass === "Busy2026") {
-        localStorage.setItem("activeUser", "adminstrator");
+      } else if (user === "administrator" && pass === "Busy2026") {
+        localStorage.setItem("activeUser", "administrator");
         
-        window.location.href = "adminstrator-dashboard.html";
+        window.location.href = "administrator-dashboard.html";
+      } else if (user === "GFK" && pass === "gfk2026") {
+        localStorage.setItem("activeUser", "GFK");
+
+        window.location.href = "ghaem-faraz-kousha-dashboard.html";
       } else {
         errorMsg.style.display = "block";
       }
