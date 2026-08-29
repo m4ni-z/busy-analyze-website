@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel User Guide | راهنمای استفاده از پنل</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: transparent !important;
+            background-color: transparent !important;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-family: 'Vazirmatn', Arial, sans-serif;
+        }
+
+        /* Language Switcher (Fixed Top Right) */
+        .lang-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #f2c915;
+            padding: 4px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .lang-indicator {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: calc(50% - 4px);
+            height: calc(100% - 8px);
+            background-color: #117865;
+            border-radius: 8px;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
+        }
+
+        body.lang-en .lang-indicator {
+            transform: translateX(100%);
+        }
+
+        .lang-btn {
+            position: relative;
+            z-index: 2;
+            background: none;
+            border: none;
+            outline: none;
+            padding: 6px 16px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            color: #121212;
+            transition: color 0.3s ease;
+            width: 45px;
+            text-align: center;
+        }
+
+        body.lang-fa .lang-btn[data-lang="fa"],
+        body.lang-en .lang-btn[data-lang="en"] {
+            color: #f2c915;
+        }
+
+        /* Content Layout & Visibility */
+        .container {
+            width: 100%;
+            max-width: 850px;
+            padding: 80px 20px 40px 20px;
+        }
+
+        .content-block {
+            display: none;
+            background: rgba(18, 18, 18, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 30px;
+            border: 1px solid rgba(242, 201, 21, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Direction Management */
+        .fa-content {
+            direction: rtl;
+            text-align: right;
+        }
+
+        .en-content {
+            direction: ltr;
+            text-align: left;
+            font-family: Arial, sans-serif;
+        }
+
+        body.lang-fa .fa-content { display: block; }
+        body.lang-en .en-content { display: block; }
+
+        /* Typography & Elements */
+        h1 {
+            font-size: 2.2rem;
+            color: #f2c915;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #117865;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            color: #ffffff;
+            margin: 25px 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        p {
+            line-height: 1.8;
+            color: #dddddd;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        ul {
+            margin: 10px 0 15px 0;
+            padding-right: 20px;
+            padding-left: 20px;
+        }
+
+        li {
+            line-height: 1.8;
+            color: #cccccc;
+            margin-bottom: 8px;
+        }
+
+        code {
+            background-color: #117865;
+            color: #ffffff;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+            direction: ltr;
+            display: inline-block;
+        }
+
+        /* Note Box */
+        .note-box {
+            background-color: rgba(242, 201, 21, 0.08);
+            border-right: 4px solid #f2c915;
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+
+        .en-content .note-box {
+            border-right: none;
+            border-left: 4px solid #f2c915;
+        }
+
+        .note-title {
+            font-weight: bold;
+            color: #f2c915;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        /* Info Button & Footer Styling */
+        .footer-wrapper {
+            margin-top: 35px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .info-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f2c915;
+            color: #121212;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(242, 201, 21, 0.3);
+            overflow: hidden;
+            white-space: nowrap;
+            max-width: 200px;
+            border: none;
+            outline: none;
+            user-select: none;
+            direction: ltr;
+        }
+
+        .info-btn img {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+
+        .info-btn img.icon-hover { display: none; }
+        .info-btn:hover img.icon-default { display: none; }
+        .info-btn:hover img.icon-hover { display: inline-block; }
+
+        .info-btn .label { transition: opacity 0.3s ease; }
+        .info-btn .value { display: none; opacity: 0; transition: opacity 0.3s ease; }
+
+        .info-btn:hover {
+            max-width: 280px;
+            padding: 10px 24px;
+            background-color: #ffd624;
+            box-shadow: 0 6px 20px rgba(242, 201, 21, 0.5);
+            transform: translateY(-2px);
+        }
+        .info-btn:hover .label { display: none; }
+        .info-btn:hover .value { display: inline-block; opacity: 1; }
+
+        /* Fixed Floating Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #f2c915;
+            color: #121212;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            direction: ltr;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.7rem; }
+            h2 { font-size: 1.1rem; }
+            .container { padding: 70px 15px 30px 15px; }
+            .content-block { padding: 20px; }
+            .footer-wrapper { flex-direction: column; }
+        }
+    </style>
+</head>
+<body class="lang-en">
+
+    <!-- Language Switcher (Fixed Right) -->
+    <div class="lang-switcher">
+        <div class="lang-indicator"></div>
+        <button class="lang-btn" data-lang="fa">فا</button>
+        <button class="lang-btn" data-lang="en">En</button>
+    </div>
+
+    <div class="container">
+        <!-- Persian Content -->
+        <div class="content-block fa-content">
+            <h1>راهنمای استفاده از پنل</h1>
+
+            <h2>بروزرسانی داشبورد</h2>
+            <p>داشبورد قرار گرفته روی شبکه شرکت، هر روز به‌صورت خودکار ساعت <strong>۶ بامداد</strong> بروزرسانی می‌شود.</p>
+            <p>بنابراین برای مشاهده آخرین اطلاعات، بهتر است پس از ساعت ۶ صبح وارد پنل شوید و اطلاعات جدید را بررسی کنید.</p>
+
+            <h2>مشاهده تحلیل‌ها</h2>
+            <p>برای مشاهده تحلیل‌های موجود در پنل، وارد بخش <strong>«آنالیزها»</strong> شوید و روی گزینه <strong>«باز کردن»</strong> کلیک کنید.</p>
+            <p>نام کاربری و رمز عبور نیز در همان قسمت قرار داده شده است و می‌توانید از اطلاعات نمایش‌داده‌شده برای ورود به تحلیل استفاده کنید.</p>
+
+            <h2>نمایش رمز عبور</h2>
+            <p>در صورتی که رمز عبور به‌صورت تار یا مخفی نمایش داده می‌شود، کافی است روی رمز کلیک کنید تا رمز عبور به‌صورت واضح نمایش داده شود.</p>
+
+            <h2>پشتیبانی و رفع مشکلات</h2>
+            <p>در صورت بروز هرگونه مشکل در <strong>داشبورد، بخش آنالیزها یا SQL Server</strong>، و همچنین در صورت مشاهده خطا یا عدم نمایش صحیح اطلاعات، لطفاً با شماره‌های پشتیبانی اعلام‌شده در پنل تماس بگیرید.</p>
+
+            <div class="footer-wrapper">
+                <button class="info-btn copyBtn" data-value="+989124015073">
+                    <img class="icon-default" src="phone1.ico" alt="Icon">
+                    <img class="icon-hover" src="phone2.ico" alt="Icon Hover">
+                    <span class="label">Dashboard</span>
+                    <span class="value">+989124015073</span>
+                </button>
+                <button class="info-btn copyBtn" data-value="+989120148645">
+                    <img class="icon-default" src="phone1.ico" alt="Icon">
+                    <img class="icon-hover" src="phone2.ico" alt="Icon Hover">
+                    <span class="label">SQL Server</span>
+                    <span class="value">+989120148645</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- English Content -->
+        <div class="content-block en-content">
+            <h1>Panel Usage Guide</h1>
+
+            <h2>Dashboard Updates</h2>
+            <p>The dashboard available on the company network is automatically updated every day at <strong>6:00 AM</strong>.</p>
+            <p>Therefore, to view the latest information, it is recommended to access the panel after 6:00 AM and check the updated information.</p>
+
+            <h2>Viewing Analyses</h2>
+            <p>To view the available analyses in the panel, go to the <strong>"Analyses"</strong> section and click on the <strong>"Open"</strong> option.</p>
+            <p>The username and password are also provided in the same section, and you can use the displayed information to access the analysis.</p>
+
+            <h2>Showing the Password</h2>
+            <p>If the password is displayed as blurred or hidden, simply click on the password to make it clearly visible.</p>
+
+            <h2>Support and Troubleshooting</h2>
+            <p>If you encounter any problems with the <strong>dashboard, Analyses section, or SQL Server</strong>, or if you notice any errors or incorrect information display, please contact the support numbers provided in the panel.</p>
+
+            <div class="footer-wrapper">
+                <button class="info-btn copyBtn" data-value="+989124015073">
+                    <img class="icon-default" src="phone1.ico" alt="Icon">
+                    <img class="icon-hover" src="phone2.ico" alt="Icon Hover">
+                    <span class="label">Dashboard</span>
+                    <span class="value">+989124015073</span>
+                </button>
+                <button class="info-btn copyBtn" data-value="+989120148645">
+                    <img class="icon-default" src="phone1.ico" alt="Icon">
+                    <img class="icon-hover" src="phone2.ico" alt="Icon Hover">
+                    <span class="label">SQL Server</span>
+                    <span class="value">+989120148645</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="toast" id="toast">Copied to clipboard!</div>
+    </div>
+
+    <script>
+        // Language Switcher
+        const btns = document.querySelectorAll('.lang-btn');
+        btns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.body.className = 'lang-' + btn.dataset.lang;
+            });
+        });
+
+        // Copy Value Logic
+        const copyBtns = document.querySelectorAll('.copyBtn');
+        const toast = document.getElementById('toast');
+
+        copyBtns.forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const value = btn.getAttribute('data-value');
+                try {
+                    await navigator.clipboard.writeText(value);
+                    showToast('Copied to clipboard!');
+                } catch (err) {
+                    const textArea = document.createElement('textarea');
+                    textArea.value = value;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    showToast('Copied to clipboard!');
+                }
+            });
+        });
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
