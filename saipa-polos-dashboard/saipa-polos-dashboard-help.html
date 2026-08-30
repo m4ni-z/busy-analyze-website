@@ -178,7 +178,7 @@
             display: block;
         }
 
-        /* Info Button & Footer Styling */
+        /* Phone Button & Footer Styling */
         .footer-wrapper {
             margin-top: 35px;
             display: flex;
@@ -190,7 +190,7 @@
             position: relative;
         }
 
-        .info-btn {
+        .phone-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -213,29 +213,29 @@
             direction: ltr;
         }
 
-        .info-btn img {
+        .phone-btn img {
             width: 18px;
             height: 18px;
             margin-right: 8px;
             flex-shrink: 0;
         }
 
-        .info-btn img.icon-hover { display: none; }
-        .info-btn:hover img.icon-default { display: none; }
-        .info-btn:hover img.icon-hover { display: inline-block; }
+        .phone-btn img.icon-hover { display: none; }
+        .phone-btn:hover img.icon-default { display: none; }
+        .phone-btn:hover img.icon-hover { display: inline-block; }
 
-        .info-btn .label { transition: opacity 0.3s ease; }
-        .info-btn .value { display: none; opacity: 0; transition: opacity 0.3s ease; }
+        .phone-btn .label { transition: opacity 0.3s ease; }
+        .phone-btn .number { display: none; opacity: 0; transition: opacity 0.3s ease; }
 
-        .info-btn:hover {
+        .phone-btn:hover {
             max-width: 280px;
             padding: 10px 24px;
             background-color: #ffd624;
             box-shadow: 0 6px 20px rgba(242, 201, 21, 0.5);
             transform: translateY(-2px);
         }
-        .info-btn:hover .label { display: none; }
-        .info-btn:hover .value { display: inline-block; opacity: 1; }
+        .phone-btn:hover .label { display: none; }
+        .phone-btn:hover .number { display: inline-block; opacity: 1; }
 
         /* Fixed Floating Toast */
         .toast {
@@ -287,66 +287,84 @@
         <div class="content-block fa-content">
             <h1>راهنمای استفاده از پنل</h1>
 
-            <h2>بروزرسانی داشبورد</h2>
-            <p>داشبورد قرار گرفته روی شبکه شرکت، هر روز به‌صورت خودکار ساعت <strong>۶ بامداد</strong> بروزرسانی می‌شود.</p>
-            <p>بنابراین برای مشاهده آخرین اطلاعات، بهتر است پس از ساعت ۶ صبح وارد پنل شوید و اطلاعات جدید را بررسی کنید.</p>
+            <h2>بارگذاری داده‌های ورودی</h2>
+            <p>برای بارگذاری داده‌های ورودی، فایل اکسل خود را از طریق بخش <strong>«آپلود فایل»</strong> در پنل کاربری بارگذاری کنید.</p>
 
-            <h2>مشاهده تحلیل‌ها</h2>
-            <p>برای مشاهده تحلیل‌های موجود در پنل، وارد بخش <strong>«آنالیزها»</strong> شوید و روی گزینه <strong>«باز کردن»</strong> کلیک کنید.</p>
-            <p>نام کاربری و رمز عبور نیز در همان قسمت قرار داده شده است و می‌توانید از اطلاعات نمایش‌داده‌شده برای ورود به تحلیل استفاده کنید.</p>
+            <div class="note-box">
+                <span class="note-title">توجه داشته باشید:</span>
+                <ul>
+                    <li>فایل باید حتماً با فرمت <strong>Excel</strong> باشد.</li>
+                    <li>نام شیت (Sheet) فایل اکسل باید دقیقاً <code>sp</code> باشد.</li>
+                    <li>از صحت و کامل بودن اطلاعات فایل پیش از بارگذاری اطمینان حاصل کنید؛ بارگذاری فایل با فرمت یا ساختار نادرست ممکن است باعث اختلال در پردازش و نمایش تحلیل‌ها شود.</li>
+                </ul>
+            </div>
 
-            <h2>نمایش رمز عبور</h2>
-            <p>در صورتی که رمز عبور به‌صورت تار یا مخفی نمایش داده می‌شود، کافی است روی رمز کلیک کنید تا رمز عبور به‌صورت واضح نمایش داده شود.</p>
+            <h2>به‌روزرسانی تحلیل‌ها</h2>
+            <p>پس از بارگذاری فایل، داده‌ها پردازش شده و تحلیل‌ها و داشبورد به‌روزرسانی می‌شوند.</p>
+            <p>فرآیند به‌روزرسانی معمولاً حدود <strong>۶ تا ۸ ساعت</strong> از زمان بارگذاری فایل زمان می‌برد.</p>
 
-            <h2>پشتیبانی و رفع مشکلات</h2>
-            <p>در صورت بروز هرگونه مشکل در <strong>داشبورد، بخش آنالیزها یا SQL Server</strong>، و همچنین در صورت مشاهده خطا یا عدم نمایش صحیح اطلاعات، لطفاً با شماره‌های پشتیبانی اعلام‌شده در پنل تماس بگیرید.</p>
+            <h2>مشاهده تحلیل‌ها و داشبورد</h2>
+            <p>برای مشاهده تحلیل‌ها و داشبورد، از طریق پنل کاربری وارد بخش <strong>«آنالیزها»</strong> شوید و گزینه <strong>«باز کردن»</strong> را انتخاب کنید.</p>
+            <p>رمز عبور داشبورد نیز در همین بخش نمایش داده می‌شود. در صورتی که رمز عبور به‌صورت مخفی نمایش داده شده باشد، با کلیک روی آن می‌توانید رمز را مشاهده کنید.</p>
+
+            <h2>پشتیبانی</h2>
+            <p>در صورت <strong>ملی شدن اینترنت</strong> یا بروز مشکل در دسترسی به پنل، از طریق راه‌های ارتباطی درج‌شده در سایت با پشتیبانی تماس بگیرید.</p>
 
             <div class="footer-wrapper">
-                <button class="info-btn copyBtn" data-value="+989124015073">
-                    <img class="icon-default" src="phone1.ico" alt="Icon">
-                    <img class="icon-hover" src="phone2.ico" alt="Icon Hover">
-                    <span class="label">Dashboard</span>
-                    <span class="value">+989124015073</span>
+                <button class="phone-btn copyBtn" data-number="+989124015073">
+                    <img class="icon-default" src="../images/phone1.ico" alt="Phone Icon">
+                    <img class="icon-hover" src="../images/phone2.ico" alt="Phone Icon Hover">
+                    <span class="label">Phone number</span>
+                    <span class="number">+989124015073</span>
                 </button>
-                <button class="info-btn copyBtn" data-value="+989120148645">
-                    <img class="icon-default" src="phone1.ico" alt="Icon">
-                    <img class="icon-hover" src="phone2.ico" alt="Icon Hover">
-                    <span class="label">SQL Server</span>
-                    <span class="value">+989120148645</span>
+                <button class="phone-btn copyBtn" data-number="+989373793330">
+                    <img class="icon-default" src="../images/phone1.ico" alt="Phone Icon">
+                    <img class="icon-hover" src="../images/phone2.ico" alt="Phone Icon Hover">
+                    <span class="label">Phone number</span>
+                    <span class="number">+989373793330</span>
                 </button>
             </div>
         </div>
 
         <!-- English Content -->
         <div class="content-block en-content">
-            <h1>Panel Usage Guide</h1>
+            <h1>Panel User Guide</h1>
 
-            <h2>Dashboard Updates</h2>
-            <p>The dashboard available on the company network is automatically updated every day at <strong>6:00 AM</strong>.</p>
-            <p>Therefore, to view the latest information, it is recommended to access the panel after 6:00 AM and check the updated information.</p>
+            <h2>Uploading Input Data</h2>
+            <p>To upload your input data, upload your Excel file through the <strong>"File Upload"</strong> section in your user panel.</p>
 
-            <h2>Viewing Analyses</h2>
-            <p>To view the available analyses in the panel, go to the <strong>"Analyses"</strong> section and click on the <strong>"Open"</strong> option.</p>
-            <p>The username and password are also provided in the same section, and you can use the displayed information to access the analysis.</p>
+            <div class="note-box">
+                <span class="note-title">Please note:</span>
+                <ul>
+                    <li>The file must be in <strong>Excel</strong> format.</li>
+                    <li>The name of the Excel sheet must be exactly <code>sp</code>.</li>
+                    <li>Make sure that the file contains complete and accurate data before uploading it. Uploading a file with an incorrect format or structure may cause issues with data processing and analysis display.</li>
+                </ul>
+            </div>
 
-            <h2>Showing the Password</h2>
-            <p>If the password is displayed as blurred or hidden, simply click on the password to make it clearly visible.</p>
+            <h2>Analysis Updates</h2>
+            <p>After uploading the file, the data will be processed and the analyses and dashboard will be updated.</p>
+            <p>The update process usually takes approximately <strong>6 to 8 hours</strong> from the time the file is uploaded.</p>
 
-            <h2>Support and Troubleshooting</h2>
-            <p>If you encounter any problems with the <strong>dashboard, Analyses section, or SQL Server</strong>, or if you notice any errors or incorrect information display, please contact the support numbers provided in the panel.</p>
+            <h2>Viewing Analyses and Dashboard</h2>
+            <p>To view the analyses and dashboard, go to the <strong>"Analyses"</strong> section in your user panel and click <strong>"Open"</strong>.</p>
+            <p>The dashboard password is also displayed in this section. If the password is hidden, you can click on it to reveal it.</p>
+
+            <h2>Support</h2>
+            <p>In case of an <strong>internet shutdown</strong> or any issue accessing the panel, please contact support through the contact methods provided on the website.</p>
 
             <div class="footer-wrapper">
-                <button class="info-btn copyBtn" data-value="+989124015073">
-                    <img class="icon-default" src="phone1.ico" alt="Icon">
-                    <img class="icon-hover" src="phone2.ico" alt="Icon Hover">
-                    <span class="label">Dashboard</span>
-                    <span class="value">+989124015073</span>
+                <button class="phone-btn copyBtn" data-number="+989124015073">
+                    <img class="icon-default" src="../images/phone1.ico" alt="Phone Icon">
+                    <img class="icon-hover" src="../images/phone2.ico" alt="Phone Icon Hover">
+                    <span class="label">Phone number</span>
+                    <span class="number">+989124015073</span>
                 </button>
-                <button class="info-btn copyBtn" data-value="+989120148645">
-                    <img class="icon-default" src="phone1.ico" alt="Icon">
-                    <img class="icon-hover" src="phone2.ico" alt="Icon Hover">
-                    <span class="label">SQL Server</span>
-                    <span class="value">+989120148645</span>
+                <button class="phone-btn copyBtn" data-number="+989373793330">
+                    <img class="icon-default" src="../images/phone1.ico" alt="Phone Icon">
+                    <img class="icon-hover" src="../images/phone2.ico" alt="Phone Icon Hover">
+                    <span class="label">Phone number</span>
+                    <span class="number">+989373793330</span>
                 </button>
             </div>
         </div>
@@ -363,19 +381,19 @@
             });
         });
 
-        // Copy Value Logic
+        // Copy Phone Number Logic
         const copyBtns = document.querySelectorAll('.copyBtn');
         const toast = document.getElementById('toast');
 
         copyBtns.forEach(btn => {
             btn.addEventListener('click', async () => {
-                const value = btn.getAttribute('data-value');
+                const phoneNumber = btn.getAttribute('data-number');
                 try {
-                    await navigator.clipboard.writeText(value);
+                    await navigator.clipboard.writeText(phoneNumber);
                     showToast('Copied to clipboard!');
                 } catch (err) {
                     const textArea = document.createElement('textarea');
-                    textArea.value = value;
+                    textArea.value = phoneNumber;
                     document.body.appendChild(textArea);
                     textArea.select();
                     document.execCommand('copy');

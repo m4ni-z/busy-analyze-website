@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sign In</title>
-  <link rel="icon" href="favicon.ico">
+  <link rel="icon" href="../images/favicon.ico">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
   <style>
     html, body {
@@ -174,23 +174,23 @@
 <body>
 
   <div id="navbar">
-    <img src="logo.png" class="nav-logo" alt="logo">
+    <img src="../images/logo.png" class="nav-logo" alt="logo">
 
-    <a href="index.html" class="nav-item">
+    <a href="../" class="nav-item">
       <button class="btn">
-        <img src="Home.ico" alt=".">
+        <img src="../images/Home.ico" alt=".">
         <span class="btn-text">Home</span>
       </button>
     </a>
 
     <button class="btn nav-item" type="button">
-      <img src="Dashboards+.ico" alt=".">
+      <img src="../images/Dashboards+.ico" alt=".">
       <span class="btn-text" style="color: #117865;">Dashboards</span>
     </button>
 
-    <a href="contact-us.html" class="nav-item">
+    <a href="../contact-us" class="nav-item">
       <button class="btn">
-        <img src="message.ico" alt=".">
+        <img src="../images/message.ico" alt=".">
         <span class="btn-text">Contact us</span>
       </button>
     </a>
@@ -219,11 +219,11 @@
   <script>
     const loggedInUser = localStorage.getItem("activeUser");
     if (loggedInUser === "saipapolos") {
-      window.location.href = "saipa-polos-dashboard.html";
+      window.location.href = "../saipa-polos-dashboard";
     } else if (loggedInUser === "administrator") {
-      window.location.href = "administrator-dashboard.html";
+      window.location.href = "../administrator-dashboard";
     } else if (loggedInUser === "GFK") {
-      window.location.href = "ghaem-faraz-kousha-dashboard.html";
+      window.location.href = "../ghaem-faraz-kousha-dashboard";
     }
 
     const BASE_WIDTH = 1920;
@@ -256,15 +256,15 @@
       if (user === "saipapolos" && pass === "sp2026") {
         localStorage.setItem("activeUser", "saipapolos");
         
-        window.location.href = "saipa-polos-dashboard.html";
+        window.location.href = "../saipa-polos-dashboard";
       } else if (user === "administrator" && pass === "Busy2026") {
         localStorage.setItem("activeUser", "administrator");
         
-        window.location.href = "administrator-dashboard.html";
+        window.location.href = "../administrator-dashboard";
       } else if (user === "GFK" && pass === "gfk2026") {
         localStorage.setItem("activeUser", "GFK");
 
-        window.location.href = "ghaem-faraz-kousha-dashboard.html";
+        window.location.href = "../ghaem-faraz-kousha-dashboard";
       } else {
         errorMsg.style.display = "block";
       }
