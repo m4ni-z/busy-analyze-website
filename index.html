@@ -14,6 +14,7 @@
       height: 100%;
       background-color: black;
       overflow: hidden;
+      transition: background-color 0.35s ease;
     }
 
     #stage {
@@ -30,6 +31,16 @@
       text-align: center;
     }
 
+    #logoVideo,
+    #logoImage {
+      transform: scale(.5);
+    }
+
+    #logoImage {
+      display: none;
+      object-fit: contain;
+    }
+
     #navbar {
       position: fixed;
       top: 0;
@@ -41,6 +52,7 @@
       background-color: rgba(0, 0, 0, 0.9);
       padding: 10px 20px;
       gap: 20px;
+      transition: background-color 0.35s ease;
     }
 
     #navbar .nav-logo {
@@ -94,6 +106,37 @@
       opacity: 1;
     }
 
+    /* دکمه تغییر حالت روشن/تاریک - کاملاً مستقل، چسبیده به گوشه واقعی بالا-راستِ صفحه (اسکیل نمی‌شود) */
+    #themeToggle {
+      position: fixed;
+      top: 15px;
+      right: 20px;
+      z-index: 11;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border: none;
+      background-color: transparent;
+      cursor: pointer;
+      opacity: 0.85;
+      transition: opacity 0.2s ease;
+    }
+
+    #themeToggle:hover {
+      opacity: 1;
+    }
+
+    #themeToggle img {
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+      flex-shrink: 0;
+      margin: 0;
+    }
+
     #credit {
       position: fixed;
       bottom: 0;
@@ -105,6 +148,22 @@
       color: rgba(255, 255, 255, 0.35);
       z-index: 10;
       letter-spacing: 0.5px;
+      transition: color 0.35s ease;
+    }
+
+    /* حالت روشن (لایت مود) */
+    body.light-mode,
+    body.light-mode #stage {
+      background-color: #ffffff;
+    }
+
+    body.light-mode #navbar {
+      background-color: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12);
+    }
+
+    body.light-mode #credit {
+      color: rgba(0, 0, 0, 0.55);
     }
   </style>
 </head>
@@ -112,7 +171,8 @@
 
   <div id="stage">
 
-    <video id="logoVideo" src="images/logo.mp4" autoplay muted playsinline style="transform: scale(.5);"></video>
+    <video id="logoVideo" src="images/logo.mp4" autoplay muted playsinline></video>
+    <img id="logoImage" src="images/logo.png" alt="logo">
 
   </div>
 
@@ -139,10 +199,31 @@
     </a>
   </div>
 
+  <button id="themeToggle" type="button">
+    <img id="themeIcon" src="images/sun.ico" alt=".">
+  </button>
+
   <div id="credit">Made by Mani</div>
 
   <script>
     const video = document.getElementById('logoVideo');
+    const logoImage = document.getElementById('logoImage');
+    const body = document.body;
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+
+    // اندازه‌ی لوگوی جایگزین (logo.ico) دقیقا برابر اندازه‌ی ویدیو (logo.mp4) تنظیم می‌شود
+    function syncLogoImageSize() {
+      const w = video.videoWidth || video.offsetWidth;
+      const h = video.videoHeight || video.offsetHeight;
+      if (w && h) {
+        logoImage.style.width = w + 'px';
+        logoImage.style.height = h + 'px';
+      }
+    }
+
+    video.addEventListener('loadedmetadata', syncLogoImageSize);
+    window.addEventListener('resize', syncLogoImageSize);
 
     video.addEventListener('ended', function () {
       video.pause();
@@ -152,6 +233,35 @@
       document.addEventListener('click', function () {
         video.play();
       }, { once: true });
+    });
+
+    // اعمال حالت روشن یا تاریک
+    function applyTheme(theme) {
+      if (theme === 'light') {
+        body.classList.add('light-mode');
+        video.style.display = 'none';
+        logoImage.style.display = 'block';
+        syncLogoImageSize();
+        video.pause();
+        themeIcon.src = 'images/moon.ico';
+      } else {
+        body.classList.remove('light-mode');
+        logoImage.style.display = 'none';
+        video.style.display = 'block';
+        video.play().catch(function () {});
+        themeIcon.src = 'images/sun.ico';
+      }
+    }
+
+    // خواندن حالت ذخیره‌شده از حافظه‌ی مرورگر (بین صفحات مختلف سایت مشترک است)
+    const savedTheme = localStorage.getItem('busyanalyze-theme') || 'dark';
+    applyTheme(savedTheme);
+
+    themeToggle.addEventListener('click', function () {
+      const isLight = body.classList.contains('light-mode');
+      const newTheme = isLight ? 'dark' : 'light';
+      localStorage.setItem('busyanalyze-theme', newTheme);
+      applyTheme(newTheme);
     });
 
     const BASE_WIDTH = 1920;
