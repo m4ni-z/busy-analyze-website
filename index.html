@@ -106,7 +106,6 @@
       opacity: 1;
     }
 
-    /* دکمه تغییر حالت روشن/تاریک - کاملاً مستقل، چسبیده به گوشه واقعی بالا-راستِ صفحه (اسکیل نمی‌شود) */
     #themeToggle {
       position: fixed;
       top: 15px;
@@ -151,7 +150,6 @@
       transition: color 0.35s ease;
     }
 
-    /* حالت روشن (لایت مود) */
     body.light-mode,
     body.light-mode #stage {
       background-color: #ffffff;
@@ -212,7 +210,6 @@
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = document.getElementById('themeIcon');
 
-    // اندازه‌ی لوگوی جایگزین (logo.ico) دقیقا برابر اندازه‌ی ویدیو (logo.mp4) تنظیم می‌شود
     function syncLogoImageSize() {
       const w = video.videoWidth || video.offsetWidth;
       const h = video.videoHeight || video.offsetHeight;
@@ -235,7 +232,6 @@
       }, { once: true });
     });
 
-    // اعمال حالت روشن یا تاریک
     function applyTheme(theme) {
       if (theme === 'light') {
         body.classList.add('light-mode');
@@ -253,7 +249,6 @@
       }
     }
 
-    // خواندن حالت ذخیره‌شده از حافظه‌ی مرورگر (بین صفحات مختلف سایت مشترک است)
     const savedTheme = localStorage.getItem('busyanalyze-theme') || 'dark';
     applyTheme(savedTheme);
 

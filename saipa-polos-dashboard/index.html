@@ -96,7 +96,6 @@
       opacity: 1;
     }
 
-    /* دکمه تغییر حالت روشن/تاریک - کاملاً مستقل، چسبیده به گوشه واقعی بالا-راستِ صفحه (اسکیل نمی‌شود) */
     #themeToggle {
       position: fixed;
       top: 15px;
@@ -544,7 +543,6 @@
       color: #e4756b;
     }
 
-    /* حالت روشن (لایت مود) */
     html.light-mode,
     body.light-mode {
       background-color: #ffffff;
@@ -555,7 +553,6 @@
       box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12);
     }
 
-    /* لایت‌مود برای کارت‌ها و دکمه‌های داشبورد - فقط پس‌زمینه و متن‌های سفید عوض می‌شوند؛ زرد، سبز و قرمز دست‌نخورده می‌مانند (حالت تاریک بدون تغییر) */
     body.light-mode .option-btn {
       background: #ffffff;
       box-shadow: 0 4px 15px rgba(242, 201, 21, 0.12);
@@ -726,7 +723,6 @@
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = document.getElementById('themeIcon');
 
-    // اعمال حالت روشن یا تاریک
     function applyTheme(theme) {
       if (theme === 'light') {
         document.documentElement.classList.add('light-mode');
@@ -739,7 +735,6 @@
       }
     }
 
-    // خواندن حالت ذخیره‌شده از حافظه‌ی مرورگر (بین صفحات مختلف سایت مشترک است)
     const savedTheme = localStorage.getItem('busyanalyze-theme') || 'dark';
     applyTheme(savedTheme);
 
@@ -823,11 +818,16 @@
       }
     }
 
-    // Log Out Handler (پاکسازی حافظه و انتقال مستقیم به فایل sign-in.html)
     function handleLogout() {
+      const currentTheme = localStorage.getItem('busyanalyze-theme');
+
       sessionStorage.clear();
       localStorage.clear();
-      
+
+      if (currentTheme) {
+        localStorage.setItem('busyanalyze-theme', currentTheme);
+      }
+
       window.location.href = '../sign-in';
     }
 

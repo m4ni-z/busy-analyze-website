@@ -95,7 +95,6 @@
       opacity: 1;
     }
 
-    /* دکمه تغییر حالت روشن/تاریک - کاملاً مستقل، چسبیده به گوشه واقعی بالا-راستِ صفحه (اسکیل نمی‌شود) */
     #themeToggle {
       position: fixed;
       top: 15px;
@@ -205,7 +204,6 @@
       display: none;
     }
 
-    /* حالت روشن (لایت مود) - فقط پس‌زمینه و متن‌های سفید؛ زرد و سبز دست‌نخورده می‌مانند */
     body.light-mode,
     body.light-mode #stage {
       background-color: #f7f9f8;
@@ -303,7 +301,6 @@
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = document.getElementById('themeIcon');
 
-    // اعمال حالت روشن یا تاریک
     function applyTheme(theme) {
       if (theme === 'light') {
         body.classList.add('light-mode');
@@ -314,7 +311,6 @@
       }
     }
 
-    // خواندن حالت ذخیره‌شده از حافظه‌ی مرورگر (بین صفحات مختلف سایت مشترک است)
     const savedTheme = localStorage.getItem('busyanalyze-theme') || 'dark';
     applyTheme(savedTheme);
 
