@@ -3,68 +3,804 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>404</title>
+<title>Dashboard-Administrator</title>
 <link rel="icon" href="../images/favicon.ico">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 <style>
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  background-color: black;
-  font-family: sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
+  :root{
+    --gold:#f2c915;
+    --teal:#117865;
+    --coral:#e4756b;
+    --nav-w:270px;
+  }
 
-h1 {
-  color: #f2c915;
-  font-size: 90px;
-  margin: 0;
-}
+  *{box-sizing:border-box;}
 
-.coming-soon {
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 13px;
-  margin-top: 6px;
-  letter-spacing: 1px;
-}
+  html, body{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    background-color:#000000;
+    color:#f2f2f2;
+    font-family: sans-serif;
+    overflow:hidden;
+    transition: background-color .35s ease, color .35s ease;
+  }
 
-.back-link {
-  display: inline-block;
-  margin-top: 30px;
-  color: #117865;
-  font-size: 16px;
-  text-decoration: none;
-  cursor: pointer;
-}
+  html.light-mode,
+  body.light-mode,
+  body.light-mode #stage{
+    background-color:#ffffff;
+  }
 
-.back-link:hover {
-  color: #15937c;
-}
+  /* ---------- Stage: fixed 1920x1080 design canvas, scaled+centered ---------- */
+  #stage{
+    position:fixed;
+    top:0; left:0;
+    width:1920px;
+    height:1080px;
+    transform-origin: top left;
+  }
+
+  /* ---------- Navbar (identical pattern to the rest of the site) ---------- */
+  #navbar{
+    position:fixed;
+    top:0; left:0;
+    transform-origin: top left;
+    z-index:20;
+    display:flex;
+    align-items:center;
+    background-color: rgba(0,0,0,0.9);
+    padding:10px 20px;
+    gap:20px;
+    transition: background-color .35s ease;
+  }
+  body.light-mode #navbar{
+    background-color: rgba(255,255,255,0.95);
+    box-shadow:0 1px 6px rgba(0,0,0,0.12);
+  }
+
+  #navbar .nav-logo{ height:50px; width:auto; flex-shrink:0; }
+
+  .nav-item{ text-decoration:none; }
+
+  .nav-item .btn, .btn.nav-item{
+    max-width:40px;
+    height:50px;
+    border-radius:0;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    padding:0;
+    border:none;
+    background-color:transparent;
+    transition:max-width .4s ease;
+    white-space:nowrap;
+  }
+  .nav-item .btn img, .btn.nav-item img{
+    width:38px; height:38px; object-fit:contain; flex-shrink:0; margin:0;
+  }
+  .nav-item .btn-text, .btn.nav-item .btn-text{
+    opacity:0;
+    color:var(--gold);
+    font-family:sans-serif;
+    font-size:18px;
+    margin-left:8px;
+    margin-right:14px;
+    transition:opacity .3s ease .1s;
+  }
+  .nav-item:hover .btn, button.nav-item:hover{ max-width:220px; }
+  .nav-item:hover .btn-text, button.nav-item:hover .btn-text{ opacity:1; }
+
+  #themeToggle{
+    position:fixed;
+    top:15px; right:20px;
+    z-index:21;
+    width:38px; height:38px;
+    display:flex; align-items:center; justify-content:center;
+    padding:0; border:none; background-color:transparent; cursor:pointer;
+    opacity:.85; transition:opacity .2s ease;
+  }
+  #themeToggle:hover{ opacity:1; }
+  #themeToggle img{ width:38px; height:38px; object-fit:contain; flex-shrink:0; margin:0; }
+
+  /* ---------- Sidebar ---------- */
+  #sidebar{
+    position:absolute;
+    top:70px;
+    left:0;
+    bottom:0;
+    width:var(--nav-w);
+    background: rgba(15,15,15,0.9);
+    border-right:1px solid rgba(255,255,255,0.08);
+    border-radius:0 20px 0 0;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.35);
+    z-index:15;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    transition: width .35s ease, background-color .35s ease, border-color .35s ease;
+  }
+  body.light-mode #sidebar{
+    background:#ffffff;
+    border-color: rgba(0,0,0,0.08);
+    box-shadow: 4px 0 16px rgba(0,0,0,0.08);
+  }
+  #sidebar.collapsed{ width:0; border-right:none; box-shadow:none; }
+
+  #sidebar-inner{
+    width:var(--nav-w);
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    padding:18px 0 14px;
+  }
+
+  #sidebarCollapseBtn{
+    align-self:flex-end;
+    margin:0 14px 12px auto;
+    width:34px; height:34px;
+    border:none;
+    border-radius:50%;
+    background: rgba(242,201,21,0.08);
+    color:var(--gold);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    transition: background .2s ease;
+  }
+  #sidebarCollapseBtn:hover{ background: rgba(242,201,21,0.18); }
+  #sidebarCollapseBtn svg{ width:17px; height:17px; }
+
+  #sidebar-profile{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:6px 20px 18px;
+    margin-bottom:10px;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  body.light-mode #sidebar-profile{ border-color: rgba(0,0,0,0.08); }
+
+  #sidebar-profile .avatar{
+    width:38px; height:38px;
+    border-radius:50%;
+    flex-shrink:0;
+    background: linear-gradient(135deg, var(--teal), var(--gold));
+    display:flex; align-items:center; justify-content:center;
+  }
+  #sidebar-profile .avatar svg{ width:19px; height:19px; color:#0a0a0a; }
+
+  #sidebar-profile span{
+    font-size:14px;
+    font-weight:600;
+    color:#f2f2f2;
+    white-space:normal;
+    line-height:1.3;
+  }
+  body.light-mode #sidebar-profile span{ color:#1a1a1a; }
+
+  #sidebar-list{
+    list-style:none;
+    margin:0;
+    padding:0 12px 0 5px;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    flex:1;
+    overflow-y:auto;
+  }
+
+  .sidebar-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:13px 15px;
+    border-radius:12px;
+    border-left:3px solid transparent;
+    color: rgba(255,255,255,0.45);
+    cursor:pointer;
+    user-select:none;
+    transition: background .2s ease, color .2s ease, border-color .2s ease;
+    white-space:nowrap;
+  }
+  body.light-mode .sidebar-item{ color: rgba(0,0,0,0.45); }
+
+  .sidebar-item svg{ width:20px; height:20px; flex-shrink:0; }
+  .sidebar-item span{ font-size:15px; }
+
+  .sidebar-item:hover{
+    background: rgba(242,201,21,0.06);
+    color: rgba(255,255,255,0.85);
+  }
+  body.light-mode .sidebar-item:hover{ color: rgba(0,0,0,0.75); }
+
+  /* active = teal, matching the site's "current section" convention */
+  .sidebar-item.active{
+    background: rgba(17,120,101,0.15);
+    border-left-color:var(--teal);
+    color:var(--teal);
+  }
+
+  #sidebar-bottom{
+    margin-top:auto;
+    padding:12px 12px 0 5px;
+    border-top:1px solid rgba(255,255,255,0.08);
+  }
+  body.light-mode #sidebar-bottom{ border-color: rgba(0,0,0,0.08); }
+
+  .sidebar-item.logout{
+    color:var(--coral);
+  }
+  .sidebar-item.logout:hover{
+    background: rgba(228,117,107,0.12);
+    color:var(--coral);
+  }
+
+  /* ---------- Collapsed tab handle ---------- */
+  #sidebarTab{
+    position:absolute;
+    top:94px;
+    left:0;
+    width:22px;
+    height:56px;
+    background: rgba(15,15,15,0.9);
+    border:1px solid rgba(255,255,255,0.08);
+    border-left:none;
+    border-radius:0 14px 14px 0;
+    z-index:16;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    color:var(--gold);
+    box-shadow: 3px 0 10px rgba(0,0,0,0.3);
+    transition: background-color .35s ease, border-color .35s ease;
+  }
+  body.light-mode #sidebarTab{
+    background:#ffffff;
+    border-color: rgba(0,0,0,0.08);
+  }
+  #sidebarTab.show{ display:flex; }
+  #sidebarTab svg{ width:14px; height:14px; }
+
+  /* ---------- Main content ---------- */
+  #main-wrap{
+    position:absolute;
+    top:70px;
+    left:var(--nav-w);
+    right:0;
+    bottom:0;
+    overflow-y:auto;
+    transition: left .35s ease;
+    display:flex;
+    justify-content:center;
+  }
+  #main-wrap.sidebar-collapsed{ left:0; }
+
+  #main-content{ width:100%; max-width:1100px; padding:56px 40px 70px; }
+
+  #main-content h1{ font-size:30px; margin:0 0 6px; color:#f2f2f2; }
+  body.light-mode #main-content h1{ color:#1a1a1a; }
+
+  #main-content .page-sub{ color: rgba(255,255,255,0.45); font-size:15px; margin:0 0 44px; }
+  body.light-mode #main-content .page-sub{ color: rgba(0,0,0,0.45); }
+
+  .state-404{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    padding:70px 20px;
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:18px;
+    background: rgba(255,255,255,0.02);
+  }
+  body.light-mode .state-404{
+    border-color: rgba(0,0,0,0.08);
+    background: rgba(0,0,0,0.015);
+  }
+
+  .state-404 .code{ font-size:80px; font-weight:700; color:var(--gold); line-height:1; margin-bottom:16px; }
+  .state-404 .msg{ font-size:17px; color: rgba(255,255,255,0.45); max-width:380px; }
+  body.light-mode .state-404 .msg{ color: rgba(0,0,0,0.45); }
+
+  /* ---------- Dashboard member cards ---------- */
+  .page-view{ display:none; }
+  .page-view.active{ display:block; }
+
+  #dashboards-list{ display:flex; flex-direction:column; }
+
+  .member-card{
+    background: rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:16px;
+    padding:14px 18px;
+    margin-bottom:14px;
+    transition: transform .25s ease, box-shadow .25s ease, background-color .2s ease, border-color .2s ease;
+  }
+  body.light-mode .member-card{
+    background:#ffffff;
+    border-color: rgba(0,0,0,0.08);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  }
+  .member-card:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 12px 26px rgba(0,0,0,0.3);
+  }
+  body.light-mode .member-card:hover{
+    box-shadow: 0 12px 22px rgba(0,0,0,0.1);
+  }
+
+  .member-header{ display:flex; align-items:center; gap:12px; }
+
+  .member-toggle{
+    background:transparent;
+    border:none;
+    color:var(--gold);
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:4px;
+    flex-shrink:0;
+  }
+  .member-toggle svg{ width:16px; height:16px; transition: transform .25s ease; }
+  .member-card.open .member-toggle svg{ transform: rotate(90deg); }
+
+  .member-avatar{
+    width:34px; height:34px;
+    border-radius:50%;
+    flex-shrink:0;
+    background: linear-gradient(135deg, var(--teal), var(--gold));
+    display:flex; align-items:center; justify-content:center;
+  }
+  .member-avatar svg{ width:17px; height:17px; color:#0a0a0a; }
+
+  .member-name{
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-size:16px;
+    font-weight:700;
+    letter-spacing:.3px;
+    color:#f2f2f2;
+    flex:1;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  body.light-mode .member-name{ color:#1a1a1a; }
+
+  .member-status{ display:flex; align-items:center; gap:22px; flex-shrink:0; }
+
+  .open-btn{
+    background:transparent;
+    border:1px solid var(--teal);
+    color:var(--teal);
+    font-size:13px;
+    font-weight:600;
+    padding:5px 16px;
+    border-radius:20px;
+    cursor:pointer;
+    text-decoration:none;
+    display:inline-block;
+    transition: background .2s ease;
+  }
+  .open-btn:hover{ background: rgba(17,120,101,0.14); }
+
+  .share-btn{
+    background:transparent;
+    border:none;
+    color:var(--teal);
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:5px;
+    border-radius:8px;
+    flex-shrink:0;
+    transition: background .2s ease;
+  }
+  .share-btn:hover{ background: rgba(17,120,101,0.14); }
+  .share-btn svg{ width:16px; height:16px; }
+
+  .status-dot{
+    width:9px; height:9px;
+    border-radius:50%;
+    background:var(--teal);
+    animation: dot-pulse 1.8s ease-out infinite;
+  }
+  @keyframes dot-pulse{
+    0%{ box-shadow: 0 0 0 0 rgba(17,120,101,0.55); }
+    70%{ box-shadow: 0 0 0 9px rgba(17,120,101,0); }
+    100%{ box-shadow: 0 0 0 0 rgba(17,120,101,0); }
+  }
+
+  .member-details{
+    max-height:0;
+    overflow:hidden;
+    opacity:0;
+    padding-left:46px;
+    transition: max-height .3s ease, opacity .25s ease, margin-top .3s ease;
+  }
+  .member-card.open .member-details{
+    max-height:120px;
+    opacity:1;
+    margin-top:14px;
+  }
+
+  .detail-row{ font-size:14px; color: rgba(255,255,255,0.75); margin-bottom:6px; }
+  body.light-mode .detail-row{ color: rgba(0,0,0,0.7); }
+  .detail-row:last-child{ margin-bottom:0; }
+  .detail-key{ color:var(--gold); font-weight:600; margin-right:6px; }
+
+  .detail-line{ display:flex; align-items:center; gap:6px; }
+
+  .copy-btn{
+    background:transparent;
+    border:none;
+    color:var(--gold);
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:3px;
+    border-radius:6px;
+    transition: background .2s ease;
+  }
+  .copy-btn:hover{ background: rgba(242,201,21,0.14); }
+  .copy-btn svg{ width:14px; height:14px; }
+
+  .copy-feedback{ display:none; }
+
+  #toast{
+    position:absolute;
+    left:50%;
+    bottom:36px;
+    transform: translate(-50%, 16px);
+    background: rgba(17,120,101,0.96);
+    color:#ffffff;
+    font-size:15px;
+    font-weight:600;
+    padding:13px 28px;
+    border-radius:12px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.35);
+    opacity:0;
+    pointer-events:none;
+    z-index:50;
+    transition: opacity .25s ease, transform .25s ease;
+  }
+  #toast.show{
+    opacity:1;
+    transform: translate(-50%, 0);
+  }
 </style>
 </head>
 <body>
 
-<div>
-  <h1>404</h1>
-  <div class="coming-soon">Coming soon</div>
-  <a href="../sign-in" class="back-link" id="backLink">Back</a>
-</div>
+  <div id="stage">
+    <aside id="sidebar">
+      <div id="sidebar-inner">
+        <button id="sidebarCollapseBtn" type="button" aria-label="Collapse sidebar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+
+        <div id="sidebar-profile">
+          <div class="avatar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <span>Administrator</span>
+        </div>
+
+        <ul id="sidebar-list">
+          <li class="sidebar-item active" data-page="dashboards">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+              <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+              <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+              <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+            </svg>
+            <span>Active Dashboards</span>
+          </li>
+          <li class="sidebar-item" data-page="portfolio">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2.5" y="7" width="19" height="13" rx="2"></rect>
+              <path d="M8 7V5.5A1.5 1.5 0 0 1 9.5 4h5A1.5 1.5 0 0 1 16 5.5V7"></path>
+              <path d="M2.5 12.5h19"></path>
+            </svg>
+            <span>Portfolio</span>
+          </li>
+        </ul>
+
+        <div id="sidebar-bottom">
+          <div class="sidebar-item logout" id="logoutBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            <span>Log out</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div id="sidebarTab">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+    </div>
+
+    <div id="main-wrap">
+      <div id="main-content">
+
+        <div class="page-view active" id="page-dashboards">
+          <h1>Active Dashboards</h1>
+          <p class="page-sub">Manage and review the dashboards currently running.</p>
+
+          <div id="dashboards-list">
+
+            <!-- Member card — copy this whole .member-card block for each new member -->
+            <div class="member-card">
+              <div class="member-header">
+                <button class="member-toggle" type="button" aria-label="Toggle credentials">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+                </button>
+
+                <div class="member-avatar">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                </div>
+
+                <span class="member-name">Saipa Polos</span>
+
+                <div class="member-status">
+                  <span class="status-dot"></span>
+                  <button class="share-btn" type="button" aria-label="Share" title="Share">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="18" cy="5" r="3"></circle>
+                      <circle cx="6" cy="12" r="3"></circle>
+                      <circle cx="18" cy="19" r="3"></circle>
+                      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                    </svg>
+                  </button>
+                  <a class="open-btn" href="../saipa-polos-dashboard/" target="_blank" rel="noopener">Open</a>
+                </div>
+              </div>
+
+              <div class="member-details">
+                <div class="detail-row">
+                  <div class="detail-line">
+                    <span class="detail-key">Username:</span>
+                    <span class="detail-value">SAIPAPOLOS</span>
+                  </div>
+                </div>
+                <div class="detail-row">
+                  <div class="detail-line">
+                    <span class="detail-key">Password:</span>
+                    <span class="detail-value">sp2026</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- end member card — paste the next copy directly below this line -->
+
+            <div class="member-card">
+              <div class="member-header">
+                <button class="member-toggle" type="button" aria-label="Toggle credentials">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+                </button>
+
+                <div class="member-avatar">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                </div>
+
+                <span class="member-name">Ghaem Faraz Kousha</span>
+
+                <div class="member-status">
+                  <span class="status-dot"></span>
+                  <button class="share-btn" type="button" aria-label="Share" title="Share">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="18" cy="5" r="3"></circle>
+                      <circle cx="6" cy="12" r="3"></circle>
+                      <circle cx="18" cy="19" r="3"></circle>
+                      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                    </svg>
+                  </button>
+                  <a class="open-btn" href="../ghaem-faraz-kousha-dashboard/" target="_blank" rel="noopener">Open</a>
+                </div>
+              </div>
+
+              <div class="member-details">
+                <div class="detail-row">
+                  <div class="detail-line">
+                    <span class="detail-key">Username:</span>
+                    <span class="detail-value">GFK</span>
+                  </div>
+                </div>
+                <div class="detail-row">
+                  <div class="detail-line">
+                    <span class="detail-key">Password:</span>
+                    <span class="detail-value">gfk2026</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- end member card — paste the next copy directly below this line -->
+
+          </div>
+        </div>
+
+        <div class="page-view" id="page-portfolio">
+          <h1>Portfolio</h1>
+          <p class="page-sub">Browse and manage the showcased work.</p>
+
+          <div class="state-404">
+            <div class="code">Coming Soon</div>
+            <div class="msg">This section hasn't been built yet. Content for this page is on the way.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="toast">Copied to clipboard</div>
+  </div>
+
+  <div id="navbar">
+    <img src="../images/logo.png" class="nav-logo" alt="logo">
+
+    <a href="../" class="nav-item">
+      <button class="btn">
+        <img src="../images/Home.ico" alt=".">
+        <span class="btn-text">Home</span>
+      </button>
+    </a>
+
+    <button class="btn nav-item" type="button">
+      <img src="../images/Dashboards+.ico" alt=".">
+      <span class="btn-text" style="color: #117865;">Dashboards</span>
+    </button>
+
+    <a href="../contact-us" class="nav-item">
+      <button class="btn">
+        <img src="../images/message.ico" alt=".">
+        <span class="btn-text">Contact us</span>
+      </button>
+    </a>
+  </div>
+
+  <button id="themeToggle" type="button">
+    <img id="themeIcon" src="../images/sun.ico" alt=".">
+  </button>
 
 <script>
-document.getElementById('backLink').addEventListener('click', function (e) {
-  e.preventDefault();
-  try {
-    localStorage.clear();
-    sessionStorage.clear();
-  } catch (err) {
-    console.error('Error clearing storage:', err);
+  const body = document.body;
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon = document.getElementById('themeIcon');
+
+  function applyTheme(theme){
+    if (theme === 'light'){
+      document.documentElement.classList.add('light-mode');
+      body.classList.add('light-mode');
+      themeIcon.src = '../images/moon.ico';
+    } else {
+      document.documentElement.classList.remove('light-mode');
+      body.classList.remove('light-mode');
+      themeIcon.src = '../images/sun.ico';
+    }
   }
-  window.location.href = '../sign-in';
-});
+
+  const savedTheme = localStorage.getItem('busyanalyze-theme') || 'dark';
+  applyTheme(savedTheme);
+
+  themeToggle.addEventListener('click', function(){
+    const isLight = body.classList.contains('light-mode');
+    const newTheme = isLight ? 'dark' : 'light';
+    localStorage.setItem('busyanalyze-theme', newTheme);
+    applyTheme(newTheme);
+  });
+
+  // ---------- Stage / navbar scaling (same system as the rest of the site) ----------
+  const BASE_WIDTH = 1920;
+  const BASE_HEIGHT = 1080;
+  const stage = document.getElementById('stage');
+  const navbar = document.getElementById('navbar');
+
+  function resizeStage(){
+    const scale = Math.min(window.innerWidth / BASE_WIDTH, window.innerHeight / BASE_HEIGHT);
+    stage.style.transform = `scale(${scale})`;
+    navbar.style.transform = `scale(${scale})`;
+    // offsetWidth reflects the navbar's real layout width (transform doesn't affect it),
+    // so the sidebar can match it exactly instead of relying on a guessed value.
+    document.documentElement.style.setProperty('--nav-w', navbar.offsetWidth + 'px');
+  }
+  window.addEventListener('resize', resizeStage);
+  window.addEventListener('load', resizeStage);
+  resizeStage();
+
+  // ---------- Sidebar collapse ----------
+  const sidebar = document.getElementById('sidebar');
+  const sidebarTab = document.getElementById('sidebarTab');
+  const mainWrap = document.getElementById('main-wrap');
+  const collapseBtn = document.getElementById('sidebarCollapseBtn');
+
+  function setCollapsed(collapsed){
+    sidebar.classList.toggle('collapsed', collapsed);
+    mainWrap.classList.toggle('sidebar-collapsed', collapsed);
+    sidebarTab.classList.toggle('show', collapsed);
+    localStorage.setItem('busyanalyze-sidebar-collapsed', collapsed ? '1' : '0');
+  }
+  collapseBtn.addEventListener('click', () => setCollapsed(true));
+  sidebarTab.addEventListener('click', () => setCollapsed(false));
+  setCollapsed(localStorage.getItem('busyanalyze-sidebar-collapsed') === '1');
+
+  // ---------- Sidebar navigation ----------
+  const items = document.querySelectorAll('.sidebar-item[data-page]');
+  const pageViews = document.querySelectorAll('.page-view');
+
+  items.forEach(item => {
+    item.addEventListener('click', () => {
+      items.forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      pageViews.forEach(v => v.classList.toggle('active', v.id === 'page-' + item.dataset.page));
+      mainWrap.scrollTop = 0;
+    });
+  });
+
+  // ---------- Member card credential toggle ----------
+  document.querySelectorAll('.member-header').forEach(header => {
+    header.style.cursor = 'pointer';
+    header.addEventListener('click', (e) => {
+      if (e.target.closest('.open-btn') || e.target.closest('.share-btn')) return;
+      header.closest('.member-card').classList.toggle('open');
+    });
+  });
+
+  // ---------- Share dashboard credentials ----------
+  const toast = document.getElementById('toast');
+  let toastTimer;
+
+  document.querySelectorAll('.share-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const card = btn.closest('.member-card');
+      const name = card.querySelector('.member-name').textContent.trim();
+      const values = card.querySelectorAll('.detail-value');
+      const username = values[0] ? values[0].textContent.trim() : '';
+      const password = values[1] ? values[1].textContent.trim() : '';
+
+      const text = `${name} Dashboard\nWebsite: busyanalyze.ir\nUsername: ${username}\nPassword: ${password}`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+      });
+    });
+  });
+
+  // ---------- Log out (same behavior as the site's dashboard pages) ----------
+  document.getElementById('logoutBtn').addEventListener('click', function(){
+    const currentTheme = localStorage.getItem('busyanalyze-theme');
+
+    sessionStorage.clear();
+    localStorage.clear();
+
+    if (currentTheme){
+      localStorage.setItem('busyanalyze-theme', currentTheme);
+    }
+
+    window.location.href = '../sign-in';
+  });
 </script>
 
 </body>
