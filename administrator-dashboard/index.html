@@ -43,7 +43,7 @@
     transform-origin: top left;
   }
 
-  /* ---------- Navbar (identical pattern to the rest of the site) ---------- */
+  /* ---------- Navbar ---------- */
   #navbar{
     position:fixed;
     top:0; left:0;
@@ -216,7 +216,6 @@
   }
   body.light-mode .sidebar-item:hover{ color: rgba(0,0,0,0.75); }
 
-  /* active = teal, matching the site's "current section" convention */
   .sidebar-item.active{
     background: rgba(17,120,101,0.15);
     border-left-color:var(--teal);
@@ -287,30 +286,11 @@
   #main-content .page-sub{ color: rgba(255,255,255,0.45); font-size:15px; margin:0 0 44px; }
   body.light-mode #main-content .page-sub{ color: rgba(0,0,0,0.45); }
 
-  .state-404{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    text-align:center;
-    padding:70px 20px;
-    border:1px solid rgba(255,255,255,0.08);
-    border-radius:18px;
-    background: rgba(255,255,255,0.02);
-  }
-  body.light-mode .state-404{
-    border-color: rgba(0,0,0,0.08);
-    background: rgba(0,0,0,0.015);
-  }
-
-  .state-404 .code{ font-size:80px; font-weight:700; color:var(--gold); line-height:1; margin-bottom:16px; }
-  .state-404 .msg{ font-size:17px; color: rgba(255,255,255,0.45); max-width:380px; }
-  body.light-mode .state-404 .msg{ color: rgba(0,0,0,0.45); }
-
-  /* ---------- Dashboard member cards ---------- */
+  /* ---------- Dashboard & Portfolio member cards ---------- */
   .page-view{ display:none; }
   .page-view.active{ display:block; }
 
-  #dashboards-list{ display:flex; flex-direction:column; }
+  #dashboards-list, #portfolio-list{ display:flex; flex-direction:column; }
 
   .member-card{
     background: rgba(255,255,255,0.03);
@@ -358,6 +338,14 @@
   }
   .member-avatar svg{ width:17px; height:17px; color:#0a0a0a; }
 
+  /* Style for Portfolio custom image icon */
+  .member-portfolio-icon{
+    width:34px;
+    height:34px;
+    object-fit:contain;
+    flex-shrink:0;
+  }
+
   .member-name{
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     font-size:16px;
@@ -371,7 +359,7 @@
   }
   body.light-mode .member-name{ color:#1a1a1a; }
 
-  .member-status{ display:flex; align-items:center; gap:22px; flex-shrink:0; }
+  .member-status{ display:flex; align-items:center; gap:16px; flex-shrink:0; }
 
   .open-btn{
     background:transparent;
@@ -434,9 +422,10 @@
   .detail-row:last-child{ margin-bottom:0; }
   .detail-key{ color:var(--gold); font-weight:600; margin-right:6px; }
 
-  .detail-line{ display:flex; align-items:center; gap:6px; }
+  .detail-line{ display:flex; align-items:center; gap:8px; }
 
-  .copy-btn{
+  .copy-field-btn{
+    position:relative;
     background:transparent;
     border:none;
     color:var(--gold);
@@ -444,17 +433,45 @@
     display:inline-flex;
     align-items:center;
     justify-content:center;
-    padding:3px;
+    padding:3px 5px;
     border-radius:6px;
-    transition: background .2s ease;
+    transition: background .2s ease, opacity .2s ease;
+    opacity:0.8;
   }
-  .copy-btn:hover{ background: rgba(242,201,21,0.14); }
-  .copy-btn svg{ width:14px; height:14px; }
+  .copy-field-btn:hover{
+    background: rgba(242,201,21,0.14);
+    opacity:1;
+  }
+  .copy-field-btn svg{ width:14px; height:14px; }
 
-  .copy-feedback{ display:none; }
+  /* Tooltip styling */
+  .copy-field-btn::after{
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: #fff;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 30;
+  }
+  body.light-mode .copy-field-btn::after{
+    background: rgba(30, 30, 30, 0.9);
+  }
+  .copy-field-btn:hover::after{
+    opacity: 1;
+    transform: translateX(-50%) translateY(-2px);
+  }
 
   #toast{
-    position:absolute;
+    position:fixed;
     left:50%;
     bottom:36px;
     transform: translate(-50%, 16px);
@@ -467,7 +484,7 @@
     box-shadow: 0 10px 28px rgba(0,0,0,0.35);
     opacity:0;
     pointer-events:none;
-    z-index:50;
+    z-index:100;
     transition: opacity .25s ease, transform .25s ease;
   }
   #toast.show{
@@ -535,13 +552,13 @@
     <div id="main-wrap">
       <div id="main-content">
 
+        <!-- DASHBOARDS VIEW -->
         <div class="page-view active" id="page-dashboards">
           <h1>Active Dashboards</h1>
           <p class="page-sub">Manage and review the dashboards currently running.</p>
 
           <div id="dashboards-list">
 
-            <!-- Member card — copy this whole .member-card block for each new member -->
             <div class="member-card">
               <div class="member-header">
                 <button class="member-toggle" type="button" aria-label="Toggle credentials">
@@ -575,19 +592,30 @@
               <div class="member-details">
                 <div class="detail-row">
                   <div class="detail-line">
+                    <button class="copy-field-btn" type="button" data-tooltip="Copy Username">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                      </svg>
+                    </button>
                     <span class="detail-key">Username:</span>
                     <span class="detail-value">SAIPAPOLOS</span>
                   </div>
                 </div>
                 <div class="detail-row">
                   <div class="detail-line">
+                    <button class="copy-field-btn" type="button" data-tooltip="Copy Password">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                      </svg>
+                    </button>
                     <span class="detail-key">Password:</span>
                     <span class="detail-value">sp2026</span>
                   </div>
                 </div>
               </div>
             </div>
-            <!-- end member card — paste the next copy directly below this line -->
 
             <div class="member-card">
               <div class="member-header">
@@ -622,30 +650,181 @@
               <div class="member-details">
                 <div class="detail-row">
                   <div class="detail-line">
+                    <button class="copy-field-btn" type="button" data-tooltip="Copy Username">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                      </svg>
+                    </button>
                     <span class="detail-key">Username:</span>
                     <span class="detail-value">GFK</span>
                   </div>
                 </div>
                 <div class="detail-row">
                   <div class="detail-line">
+                    <button class="copy-field-btn" type="button" data-tooltip="Copy Password">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                      </svg>
+                    </button>
                     <span class="detail-key">Password:</span>
                     <span class="detail-value">gfk2026</span>
                   </div>
                 </div>
               </div>
             </div>
-            <!-- end member card — paste the next copy directly below this line -->
 
           </div>
         </div>
 
+        <!-- PORTFOLIO VIEW -->
         <div class="page-view" id="page-portfolio">
           <h1>Portfolio</h1>
           <p class="page-sub">Browse and manage the showcased work.</p>
 
-          <div class="state-404">
-            <div class="code">Coming Soon</div>
-            <div class="msg">This section hasn't been built yet. Content for this page is on the way.</div>
+          <div id="portfolio-list">
+
+            <!-- Item 1 -->
+            <div class="member-card">
+              <div class="member-header">
+                <img src="../images/analyze.png" alt="Analyze Icon" class="member-portfolio-icon">
+                <span class="member-name">Tour de France</span>
+                <div class="member-status">
+                  <button class="share-btn" type="button" aria-label="Share" title="Share">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="18" cy="5" r="3"></circle>
+                      <circle cx="6" cy="12" r="3"></circle>
+                      <circle cx="18" cy="19" r="3"></circle>
+                      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                    </svg>
+                  </button>
+                  <a class="open-btn" href="http://185.181.182.214:3365/reports/powerbi/BTDF2021?rs:embed=true" target="_blank" rel="noopener">Open</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="member-card">
+              <div class="member-header">
+                <img src="../images/analyze.png" alt="Analyze Icon" class="member-portfolio-icon">
+                <span class="member-name">Mahdad Building</span>
+                <div class="member-status">
+                  <button class="share-btn" type="button" aria-label="Share" title="Share">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="18" cy="5" r="3"></circle>
+                      <circle cx="6" cy="12" r="3"></circle>
+                      <circle cx="18" cy="19" r="3"></circle>
+                      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                    </svg>
+                  </button>
+                  <a class="open-btn" href="http://185.181.182.214:3365/reports/powerbi/Mahdad?rs:embed=true" target="_blank" rel="noopener">Open</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="member-card">
+              <div class="member-header">
+                <img src="../images/analyze.png" alt="Analyze Icon" class="member-portfolio-icon">
+                <span class="member-name">Iran OEM Report</span>
+                <div class="member-status">
+                  <button class="share-btn" type="button" aria-label="Share" title="Share">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="18" cy="5" r="3"></circle>
+                      <circle cx="6" cy="12" r="3"></circle>
+                      <circle cx="18" cy="19" r="3"></circle>
+                      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                    </svg>
+                  </button>
+                  <a class="open-btn" href="http://185.181.182.214:3365/reports/powerbi/IRAN-OEM/?rs:embed=true" target="_blank" rel="noopener">Open</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Item 4 -->
+            <div class="member-card">
+              <div class="member-header">
+                <img src="../images/analyze.png" alt="Analyze Icon" class="member-portfolio-icon">
+                <span class="member-name">ODM</span>
+                <div class="member-status">
+                  <button class="share-btn" type="button" aria-label="Share" title="Share">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="18" cy="5" r="3"></circle>
+                      <circle cx="6" cy="12" r="3"></circle>
+                      <circle cx="18" cy="19" r="3"></circle>
+                      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                    </svg>
+                  </button>
+                  <a class="open-btn" href="http://185.181.182.214:3365/reports/powerbi/ODM?rs:embed=true" target="_blank" rel="noopener">Open</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Item 5 -->
+            <div class="member-card">
+              <div class="member-header">
+                <img src="../images/analyze.png" alt="Analyze Icon" class="member-portfolio-icon">
+                <span class="member-name">Maral Building</span>
+                <div class="member-status">
+                  <button class="share-btn" type="button" aria-label="Share" title="Share">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="18" cy="5" r="3"></circle>
+                      <circle cx="6" cy="12" r="3"></circle>
+                      <circle cx="18" cy="19" r="3"></circle>
+                      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                    </svg>
+                  </button>
+                  <a class="open-btn" href="http://185.181.182.214:3365/reports/powerbi/Maral?rs:embed=true" target="_blank" rel="noopener">Open</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Item 6 -->
+            <div class="member-card">
+              <div class="member-header">
+                <img src="../images/analyze.png" alt="Analyze Icon" class="member-portfolio-icon">
+                <span class="member-name">Saipa Polos</span>
+                <div class="member-status">
+                  <button class="share-btn" type="button" aria-label="Share" title="Share">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="18" cy="5" r="3"></circle>
+                      <circle cx="6" cy="12" r="3"></circle>
+                      <circle cx="18" cy="19" r="3"></circle>
+                      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                    </svg>
+                  </button>
+                  <a class="open-btn" href="http://185.181.182.214:3365/reports/powerbi/saipapolos/?rs:embed=true" target="_blank" rel="noopener">Open</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Item 7 -->
+            <div class="member-card">
+              <div class="member-header">
+                <img src="../images/analyze.png" alt="Analyze Icon" class="member-portfolio-icon">
+                <span class="member-name">Ghaem Faraz Kousha</span>
+                <div class="member-status">
+                  <button class="share-btn" type="button" aria-label="Share" title="Share">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="18" cy="5" r="3"></circle>
+                      <circle cx="6" cy="12" r="3"></circle>
+                      <circle cx="18" cy="19" r="3"></circle>
+                      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                    </svg>
+                  </button>
+                  <a class="open-btn" href="http://185.181.182.214:3365/reports/powerbi/GFK?rs:embed=true" target="_blank" rel="noopener">Open</a>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
 
@@ -709,7 +888,7 @@
     applyTheme(newTheme);
   });
 
-  // ---------- Stage / navbar scaling (same system as the rest of the site) ----------
+  // ---------- Stage / navbar scaling ----------
   const BASE_WIDTH = 1920;
   const BASE_HEIGHT = 1080;
   const stage = document.getElementById('stage');
@@ -719,8 +898,6 @@
     const scale = Math.min(window.innerWidth / BASE_WIDTH, window.innerHeight / BASE_HEIGHT);
     stage.style.transform = `scale(${scale})`;
     navbar.style.transform = `scale(${scale})`;
-    // offsetWidth reflects the navbar's real layout width (transform doesn't affect it),
-    // so the sidebar can match it exactly instead of relying on a guessed value.
     document.documentElement.style.setProperty('--nav-w', navbar.offsetWidth + 'px');
   }
   window.addEventListener('resize', resizeStage);
@@ -756,8 +933,8 @@
     });
   });
 
-  // ---------- Member card credential toggle ----------
-  document.querySelectorAll('.member-header').forEach(header => {
+  // ---------- Member card credential toggle (Only for Active Dashboards) ----------
+  document.querySelectorAll('#dashboards-list .member-header').forEach(header => {
     header.style.cursor = 'pointer';
     header.addEventListener('click', (e) => {
       if (e.target.closest('.open-btn') || e.target.closest('.share-btn')) return;
@@ -765,30 +942,60 @@
     });
   });
 
-  // ---------- Share dashboard credentials ----------
+  // ---------- Toast Helper Function ----------
   const toast = document.getElementById('toast');
   let toastTimer;
 
+  function showToast(message) {
+    toast.textContent = message || 'Copied to clipboard';
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+  }
+
+  // ---------- Share button handling ----------
   document.querySelectorAll('.share-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const card = btn.closest('.member-card');
       const name = card.querySelector('.member-name').textContent.trim();
-      const values = card.querySelectorAll('.detail-value');
-      const username = values[0] ? values[0].textContent.trim() : '';
-      const password = values[1] ? values[1].textContent.trim() : '';
+      const openBtn = card.querySelector('.open-btn');
+      const address = openBtn ? openBtn.getAttribute('href') : '';
+      
+      const isPortfolio = !!btn.closest('#page-portfolio');
+      let text = '';
 
-      const text = `${name} Dashboard\nWebsite: busyanalyze.ir\nUsername: ${username}\nPassword: ${password}`;
+      if (isPortfolio) {
+        text = `${name}\naddress: ${address}`;
+      } else {
+        const values = card.querySelectorAll('.detail-value');
+        const username = values[0] ? values[0].textContent.trim() : '';
+        const password = values[1] ? values[1].textContent.trim() : '';
+        text = `${name}\nWebsite: busyanalyze.ir\nUsername: ${username}\nPassword: ${password}`;
+      }
 
       navigator.clipboard.writeText(text).then(() => {
-        toast.classList.add('show');
-        clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+        showToast('Copied to clipboard');
       });
     });
   });
 
-  // ---------- Log out (same behavior as the site's dashboard pages) ----------
+  // ---------- Copy specific username / password field ----------
+  document.querySelectorAll('.copy-field-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const line = btn.closest('.detail-line');
+      const valEl = line ? line.querySelector('.detail-value') : null;
+      if (valEl) {
+        const textToCopy = valEl.textContent.trim();
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          showToast('Copied to clipboard');
+        });
+      }
+    });
+  });
+
+  // ---------- Log out ----------
   document.getElementById('logoutBtn').addEventListener('click', function(){
     const currentTheme = localStorage.getItem('busyanalyze-theme');
 
