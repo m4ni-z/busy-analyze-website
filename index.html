@@ -163,9 +163,151 @@
     body.light-mode #credit {
       color: rgba(0, 0, 0, 0.55);
     }
+
+    /* Mobile Restriction Screen Styles */
+    #mobileScreen {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #000000;
+      z-index: 99999;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 24px;
+      box-sizing: border-box;
+      font-family: sans-serif;
+    }
+
+    .mobile-card {
+      background: rgba(18, 18, 18, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-top: 3px solid #117865;
+      border-radius: 16px;
+      padding: 36px 24px;
+      max-width: 380px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    }
+
+    .mobile-logo {
+      height: 55px;
+      width: auto;
+      object-fit: contain;
+      margin-bottom: 24px;
+    }
+
+    .mobile-icon-box {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background-color: rgba(17, 120, 101, 0.15);
+      border: 1px solid #117865;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      color: #f2c915;
+    }
+
+    .mobile-title {
+      color: #ffffff;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    .mobile-text {
+      color: #b0b0b0;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .mobile-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 20px;
+      background-color: rgba(242, 201, 21, 0.1);
+      border: 1px solid #f2c915;
+      color: #f2c915;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .mobile-badge-dot {
+      width: 6px;
+      height: 6px;
+      background-color: #117865;
+      border-radius: 50%;
+    }
+
+    /* Desktop Fullscreen Request Overlay */
+    #fullscreenOverlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .fullscreen-msg {
+      color: #ffffff;
+      font-family: sans-serif;
+      font-size: 18px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
   </style>
 </head>
 <body>
+
+  <!-- Mobile Restriction Screen -->
+  <div id="mobileScreen">
+    <div class="mobile-card">
+      <img src="images/logo.png" alt="logo" class="mobile-logo">
+      <div class="mobile-icon-box">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+          <line x1="8" y1="21" x2="16" y2="21"></line>
+          <line x1="12" y1="17" x2="12" y2="21"></line>
+        </svg>
+      </div>
+      <div class="mobile-title">Desktop Required</div>
+      <div class="mobile-text">
+        To use this website, please access it from a computer.
+      </div>
+      <div class="mobile-badge">
+        <span class="mobile-badge-dot"></span>
+        Computer / Laptop Only
+      </div>
+    </div>
+  </div>
+
+  <!-- Desktop Small Screen Overlay -->
+  <div id="fullscreenOverlay">
+    <div class="fullscreen-msg">Please make the page full screen to use the site.</div>
+  </div>
 
   <div id="stage">
 
@@ -204,6 +346,44 @@
   <div id="credit">Made by Mani</div>
 
   <script>
+    function isMobilePhone() {
+      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      
+      // Check if device is a tablet
+      const isTablet = /(ipad|tablet|playbook|silk)|(android(?!.*mobi))/i.test(userAgent);
+      if (isTablet) return false;
+
+      // Check for phone user agents or small screens with touch
+      const isPhoneUA = /Android.*Mobile|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+      const isSmallTouch = (('ontouchstart' in window || navigator.maxTouchPoints > 0) && window.innerWidth < 768);
+
+      return isPhoneUA || isSmallTouch;
+    }
+
+    const isMobile = isMobilePhone();
+
+    if (isMobile) {
+      document.getElementById('mobileScreen').style.display = 'flex';
+      document.getElementById('stage').style.display = 'none';
+      document.getElementById('navbar').style.display = 'none';
+      document.getElementById('themeToggle').style.display = 'none';
+      document.getElementById('credit').style.display = 'none';
+    }
+
+    function checkDesktopSize() {
+      if (!isMobile) {
+        const overlay = document.getElementById('fullscreenOverlay');
+        if (window.innerWidth < 1200 || window.innerHeight < 650) {
+          overlay.style.display = 'flex';
+        } else {
+          overlay.style.display = 'none';
+        }
+      }
+    }
+
+    window.addEventListener('resize', checkDesktopSize);
+    checkDesktopSize();
+
     const video = document.getElementById('logoVideo');
     const logoImage = document.getElementById('logoImage');
     const body = document.body;
